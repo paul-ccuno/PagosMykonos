@@ -1,4 +1,5 @@
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
+import LoginForm from "components/Login/LoginForm";
 import "./styles.css";
 
 const Login = () => {
@@ -15,33 +16,7 @@ const Login = () => {
         >
           Iniciar Sesión
         </Typography>
-        <form>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            {/* <TextField
-            variant="outlined"
-            label="xd"
-            type="date"
-            fullWidth
-            InputLabelProps={{ shrink: true }}
-          /> */}
-
-            <TextField
-              variant="outlined"
-              label="Usuario"
-              type="text"
-              size="small"
-            />
-            <TextField
-              variant="outlined"
-              label="Contraseña"
-              type="password"
-              size="small"
-            />
-            <Button variant="contained" type="">
-              Iniciar Sesión
-            </Button>
-          </Box>
-        </form>
+        <LoginForm />
       </Container>
     </>
   );

@@ -15,12 +15,12 @@ import { Logout as LogoutIcon, Menu as MenuIcon } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { publicRoutes, privateRoutes } from "../../../routes/routes";
+import { publicRoutes, privateRoutes } from "routes/routes";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const isAuthenticated = true;
+  const isAuthenticated = false;
   const [routes, setRoutes] = useState(publicRoutes);
 
   useEffect(() => {
