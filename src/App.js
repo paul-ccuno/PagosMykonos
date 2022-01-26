@@ -1,8 +1,8 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import Login from "./pages/Login";
-import { Navbar } from "react-bootstrap";
+import Login from "./pages/login";
+import Navbar from "./components/General/Navbar";
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="login" element={<Login />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </div>
