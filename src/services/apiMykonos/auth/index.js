@@ -13,10 +13,10 @@ export const signIn = async ({ data }) => {
   }
 };
 
-export const signOut = async () => {
+export const logOut = async () => {
   try {
     const res = await post({
-      url: "signout",
+      url: "logout",
     });
     if (!res.success) throw res;
     return res;

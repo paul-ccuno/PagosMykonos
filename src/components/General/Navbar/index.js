@@ -12,21 +12,22 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Logout as LogoutIcon, Menu as MenuIcon } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { publicRoutes, privateRoutes } from "routes/routes";
+import AuthContext from "contexts/AuthContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const isAuthenticated = false;
+  const { user, token, logOut } = useContext(AuthContext);
   const [routes, setRoutes] = useState(publicRoutes);
 
   useEffect(() => {
-    if (isAuthenticated) setRoutes(privateRoutes);
+    if (user && token) setRoutes(privateRoutes);
     else setRoutes(publicRoutes);
-  }, [isAuthenticated]);
+  }, [user, token]);
 
   const [anchorElNav, setAnchorElNav] = useState(null);
 
@@ -39,7 +40,8 @@ const Navbar = () => {
   };
 
   const logout = () => {
-    navigate("/");
+    logOut();
+    navigate("/login");
   };
 
   return (
@@ -84,10 +86,10 @@ const Navbar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {routes.map(({ to, children }) => (
-                <MenuItem key={children} onClick={handleCloseNavMenu}>
-                  <Link className="Navbar__link" to={to} />
-                  <Typography textAlign="center">{children}</Typography>
+              {routes.map(({ path, title }) => (
+                <MenuItem key={title} onClick={handleCloseNavMenu}>
+                  <Link className="Navbar__link" to={path} />
+                  <Typography textAlign="center">{title}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -101,18 +103,18 @@ const Navbar = () => {
             Sistema de Pagos
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {routes.map(({ to, children }) => (
+            {routes.map(({ path, title }) => (
               <Button
-                key={children}
+                key={title}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                <Link className="Navbar__link" to={to} />
-                {children}
+                <Link className="Navbar__link" to={path} />
+                {title}
               </Button>
             ))}
           </Box>
-          {isAuthenticated && (
+          {user && token && (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Cerrar Sesión">
                 <IconButton onClick={logout}>

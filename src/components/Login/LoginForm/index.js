@@ -1,14 +1,17 @@
-import { TextField, Button, Box } from "@mui/material";
+import { TextField, Box } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { textFieldStyles } from "components/General/TextField";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import Login, { loginFields } from "models/Login.model";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import AuthContext from "contexts/AuthContext";
 
 const LoginForm = () => {
   const navigate = useNavigate();
+
+  const { signIn } = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,7 +25,7 @@ const LoginForm = () => {
     try {
       setIsLoading(true);
       console.log(values);
-      const res = await true;
+      signIn(values);
       navigate("/clientes");
     } catch (error) {
       setIsLoading(false);

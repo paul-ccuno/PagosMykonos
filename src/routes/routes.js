@@ -1,29 +1,36 @@
+import Clientes from "pages/clientes";
+import Login from "pages/login";
+import Pagos from "pages/pagos";
+
 export const publicRoutes = [
   {
-    to: "/login",
-    children: "Iniciar Sesión",
+    path: "/login",
+    title: "Iniciar Sesión",
+    element: <Login />,
   },
 ];
 
 export const privateRoutes = [
   {
-    to: "/clientes",
-    children: "Clientes",
+    path: "/clientes",
+    title: "Clientes",
+    element: <Clientes />,
   },
   {
-    to: "/pagos",
-    children: "Pagos",
+    path: "/pagos",
+    title: "Pagos",
+    element: <Pagos />,
   },
   {
-    to: "/ajustes",
-    children: "Ajustes",
+    path: "/ajustes",
+    title: "Ajustes",
   },
   {
-    to: "/proyecciones",
-    children: "Proyecciones",
+    path: "/proyecciones",
+    title: "Proyecciones",
   },
   {
-    to: "/mantenimiento",
-    children: "Mantenimiento",
+    path: "/mantenimienpath",
+    title: "Mantenimienpath",
   },
 ];

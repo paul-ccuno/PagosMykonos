@@ -5,23 +5,25 @@ import Login from "pages/login";
 import Navbar from "components/General/Navbar";
 import { AuthProvider } from "contexts/AuthContext";
 import RequireAuth from "components/General/RequireAuth";
+import Pagos from "pages/pagos";
+import Clientes from "pages/clientes";
+import { privateRoutes } from "routes/routes";
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter basename="/pagos_mykonos">
-        <Navbar />
         <AuthProvider>
+          <Navbar />
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route
-              path="/clientes"
-              element={
-                <RequireAuth>
-                  <h1>Holla so CLientes</h1>
-                </RequireAuth>
-              }
-            />
+            {privateRoutes.map(({ path, title, element }) => (
+              <Route
+                key={title}
+                path={path}
+                element={<RequireAuth>{element}</RequireAuth>}
+              />
+            ))}
           </Routes>
         </AuthProvider>
       </BrowserRouter>
