@@ -1,3 +1,7 @@
 .App {
   min-width: 300px;
 }
+
+.MuiDataGrid-main div:nth-child(3) {
+  display: none !important;
+}

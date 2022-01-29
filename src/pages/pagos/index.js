@@ -1,7 +1,8 @@
 import "./styles.css";
 import PagosTable from "components/Pagos/PagosTable";
+import PagosDialog from "components/Pagos/PagosDialog";
 
-import { Container, Typography, Box, Button } from "@mui/material";
+import { Container, Typography, Box } from "@mui/material";
 
 const pagosStyles = {
   paddingTop: "1em",
@@ -16,7 +17,7 @@ const Pagos = () => {
         Pagos
       </Typography>
       <Box>
-        <Button>Crear</Button>
+        <PagosDialog />
       </Box>
       <PagosTable />
     </Container>
