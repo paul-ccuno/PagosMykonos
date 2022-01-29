@@ -30,7 +30,7 @@ export const privateRoutes = [
     title: "Proyecciones",
   },
   {
-    path: "/mantenimienpath",
-    title: "Mantenimienpath",
+    path: "/mantenimiento",
+    title: "Mantenimiento",
   },
 ];
