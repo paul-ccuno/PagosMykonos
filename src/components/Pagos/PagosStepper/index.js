@@ -8,11 +8,12 @@ import {
   Box,
   Button,
 } from "@mui/material";
+import FormStepOne from "./FormStepOne";
 
 const steps = ["Step 1", "Step 2", "Step 3"];
 
 console.log("me estoy ejecutando");
-export default function PagosStepper() {
+export const PagosStepper = () => {
   const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
@@ -48,6 +49,7 @@ export default function PagosStepper() {
         <>
           <Typography variant="h6">{steps[activeStep]}</Typography>
           <Box>
+            <FormStepOne />
             <Button disabled={activeStep === 0} onClick={handleBack}>
               Back
             </Button>
@@ -61,4 +63,6 @@ export default function PagosStepper() {
       )}
     </Box>
   );
-}
+};
+
+export default PagosStepper;

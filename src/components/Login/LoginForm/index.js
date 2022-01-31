@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import Login, { loginFields } from "models/Login.model";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AuthContext from "contexts/AuthContext";
 
 const LoginForm = () => {
@@ -31,6 +31,10 @@ const LoginForm = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
 
   return (
     <form onSubmit={handleSubmit(handleSubmitLoginForm)}>
