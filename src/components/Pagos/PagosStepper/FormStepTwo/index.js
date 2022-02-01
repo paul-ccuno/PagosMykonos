@@ -60,9 +60,10 @@ const FormStepTwo = () => {
                 const _cuotasInicial = cuotasInicial;
                 _cuotasInicial[index].monto = parseFloat(value);
                 for (let i = index; i < +nCuotasInicial; i++) {
-                  const saldo = saldoTotal - parseFloat(value);
-                  _cuotasInicial[i].saldo = saldo;
-                  setSaldoTotal(saldo);
+                  const _saldo = saldoTotal - parseFloat(value);
+                  console.log(index, i, _saldo);
+                  setSaldoTotal(_saldo);
+                  _cuotasInicial[i].saldo = _saldo;
                 }
                 console.log(_cuotasInicial);
                 setCuotasInicial(_cuotasInicial);
