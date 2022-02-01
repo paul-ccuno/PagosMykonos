@@ -8,6 +8,7 @@ import RequireAuth from "components/General/RequireAuth";
 import Pagos from "pages/pagos";
 import Clientes from "pages/clientes";
 import { privateRoutes } from "routes/routes";
+import Home from "pages/home";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <AuthProvider>
           <Navbar />
           <Routes>
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             {privateRoutes.map(({ path, title, element }) => (
               <Route

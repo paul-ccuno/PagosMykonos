@@ -1,3 +1,4 @@
+import "./styles.css";
 import { useState } from "react";
 
 import {
@@ -9,10 +10,13 @@ import {
   Button,
 } from "@mui/material";
 import FormStepOne from "./FormStepOne";
+import FormStepTwo from "./FormStepTwo";
 
-const steps = ["Step 1", "Step 2", "Step 3"];
+const steps = [
+  { label: "Paso 1", component: <FormStepOne /> },
+  { label: "Paso 2", component: <FormStepTwo /> },
+];
 
-console.log("me estoy ejecutando");
 export const PagosStepper = () => {
   const [activeStep, setActiveStep] = useState(0);
 
@@ -25,31 +29,34 @@ export const PagosStepper = () => {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box className="PagosStepper" sx={{ width: "100%" }}>
       <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => {
+        {steps.map(({ label }, index) => {
           const stepProps = {};
           const labelProps = {};
-          console.log(label);
           return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
+            <Step key={label || ""} {...stepProps}>
+              <StepLabel {...labelProps}>{label || ""}</StepLabel>
             </Step>
           );
         })}
       </Stepper>
       {activeStep === steps.length ? (
         <>
-          <Typography variant="h6">{steps[activeStep]}</Typography>
+          <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+            {steps[activeStep]?.label || ""}
+          </Typography>
           <Box>
             <Button>REset</Button>
           </Box>
         </>
       ) : (
         <>
-          <Typography variant="h6">{steps[activeStep]}</Typography>
+          <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+            {steps[activeStep].label}
+          </Typography>
           <Box>
-            <FormStepOne />
+            {steps[activeStep].component}
             <Button disabled={activeStep === 0} onClick={handleBack}>
               Back
             </Button>

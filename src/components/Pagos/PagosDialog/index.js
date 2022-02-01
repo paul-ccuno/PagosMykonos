@@ -4,12 +4,12 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useState } from "react";
 import PagosStepper from "../PagosStepper";
+import { PagosProvider } from "contexts/PagosContext";
 
 const PagosDialog = () => {
   const [open, setOpen] = useState(false);
@@ -30,20 +30,21 @@ const PagosDialog = () => {
       <Button variant="contained" onClick={handleOpenDialog}>
         Crear
       </Button>
-      <Dialog
-        className="PagosDialog"
-        open={open}
-        onClose={handleCloseDialog}
-        maxWidth="md"
-        fullWidth={true}
-        fullScreen={fullScreen}
-      >
-        <DialogTitle>Agregar Nuevo Pago</DialogTitle>
-        <DialogContent>
-          <PagosStepper />
-        </DialogContent>
-        <DialogActions>Actions</DialogActions>
-      </Dialog>
+      <PagosProvider>
+        <Dialog
+          className="PagosDialog"
+          open={open}
+          onClose={handleCloseDialog}
+          maxWidth="md"
+          fullWidth={true}
+          fullScreen={fullScreen}
+        >
+          <DialogTitle>Agregar Nuevo Pago</DialogTitle>
+          <DialogContent>
+            <PagosStepper />
+          </DialogContent>
+        </Dialog>
+      </PagosProvider>
     </>
   );
 };
