@@ -1,9 +1,20 @@
-import { Container, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
+import ClientesTable from "components/Clientes/ClientesTable";
+
+const pageStyles = {
+  paddingTop: "1em",
+  display: "flex",
+  flexDirection: "column",
+};
 
 const Clientes = () => {
   return (
-    <Container>
-      <Typography>Clientes</Typography>
+    <Container className="Pagos" maxWidth="xl" style={pageStyles}>
+      <Typography variant="h4" align="center">
+        Clientes
+      </Typography>
+      <Box></Box>
+      <ClientesTable />
     </Container>
   );
 };

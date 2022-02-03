@@ -24,18 +24,20 @@ const lotes = [
 ];
 
 const FormStepOne = () => {
-  const [cliente, setCliente] = useState("");
-  const [proyecto, setProyecto] = useState("");
-  const [lote, setLote] = useState("");
-  const [precio, setPrecio] = useState("");
-  const { setPagos } = useContext(PagosContext);
+  const { pagos, setPagos, steps, setSteps, setIsDisabledNext } =
+    useContext(PagosContext);
+
+  const [cliente, setCliente] = useState(pagos[pagosFields.cliente] || "");
+  const [proyecto, setProyecto] = useState(pagos[pagosFields.proyecto] || "");
+  const [lote, setLote] = useState(pagos[pagosFields.lote] || "");
+  const [precio, setPrecio] = useState(pagos[pagosFields.precio] || "");
 
   useEffect(() => {
     console.log(lote);
   }, [lote]);
 
-  const handleSubmitStepOneForm = (e) => {
-    e.preventDefault();
+  const handleFormStepOneForm = () => {
+    // e.preventDefault();
     const resStepOne = {
       [pagosFields.cliente]: cliente,
       [pagosFields.proyecto]: proyecto,
@@ -46,16 +48,24 @@ const FormStepOne = () => {
     setPagos({ ...resStepOne });
     console.log(resStepOne);
   };
+
+  useEffect(() => {
+    if (cliente && proyecto && lote && precio) {
+      handleFormStepOneForm();
+      setIsDisabledNext(false);
+      return;
+    }
+    setIsDisabledNext(true);
+  }, [cliente, proyecto, lote, precio]);
+
   return (
-    <form onSubmit={handleSubmitStepOneForm}>
+    <form>
       <Autocomplete
         options={clientes}
-        // getOptionLabel={(option) => {
-        //   return option.label;
-        // }}
         onChange={(_, data) => {
           setCliente(data?.id);
         }}
+        defaultValue={clientes.find(({ id }) => cliente === id)}
         renderInput={(params) => (
           <TextField {...params} {...textFieldStyles} label="Cliente" />
         )}
@@ -66,6 +76,7 @@ const FormStepOne = () => {
         onChange={(_, data) => {
           setProyecto(data?.id);
         }}
+        defaultValue={proyectos.find(({ id }) => proyecto === id)}
         renderInput={(params) => (
           <TextField {...params} {...textFieldStyles} label="Proyecto" />
         )}
@@ -76,6 +87,7 @@ const FormStepOne = () => {
           setLote(data?.id);
           setPrecio(data?.precio.toString());
         }}
+        defaultValue={lotes.find(({ id }) => lote === id)}
         renderInput={(params) => (
           <TextField {...params} {...textFieldStyles} label="Lote" />
         )}
@@ -89,9 +101,6 @@ const FormStepOne = () => {
         }}
         value={precio}
       />
-      <DialogActions>
-        <Button type="submit">Next</Button>
-      </DialogActions>
     </form>
   );
 };
