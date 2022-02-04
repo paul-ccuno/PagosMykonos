@@ -8,7 +8,7 @@ export const loginFields = {
 
 const Login = yup.object().shape({
   [loginFields.username]: yup.string().required(EMPTY.USERNAME),
-  [loginFields.password]: yup.string().required(EMPTY.PASSSWORD),
+  [loginFields.password]: yup.string().required(EMPTY.PASSWORD),
 });
 
 export default Login;
