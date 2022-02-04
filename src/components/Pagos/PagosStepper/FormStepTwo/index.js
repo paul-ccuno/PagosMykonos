@@ -1,5 +1,5 @@
 import { textFieldStyles } from "components/General/TextField";
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { pagosFields } from "models/Pagos.model";
 import PagosContext from "contexts/PagosContext";
 
@@ -15,9 +15,7 @@ const FormStepTwo = () => {
   const { nCuotas, setNCuotas, fechaInicioCuotas, setFechaInicioCuotas } =
     useContext(CuotasContext);
 
-  const { pagos, setPagos, steps, setSteps, activeStep, setActiveStep } =
-    useContext(PagosContext);
-  const [saldoTotal, setSaldoTotal] = useState(pagos.precio);
+  const { pagos } = useContext(PagosContext);
 
   useEffect(() => {
     setNCuotas(pagos[pagosFields.cantidadCuotasMontoInicial] || "");
@@ -49,6 +47,7 @@ const FormStepTwo = () => {
         onChange={({ target: { value } }) => {
           const date = new Date(value);
           date.setDate(date.getDate() + 1);
+          console.log(value, date);
           setFechaInicioCuotas(date);
         }}
         defaultValue={

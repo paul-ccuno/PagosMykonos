@@ -19,6 +19,8 @@ export const cuotasFields = {
   fechaCuota: "fechaCuota",
   montoCuota: "montoCuota",
   saldoCuota: "saldoCuota",
+  tipoCuota: "tipoCuota",
+  estadoCuota: "estadoCuota",
 };
 
 const Cuota = yup.object().shape({
@@ -26,6 +28,8 @@ const Cuota = yup.object().shape({
   [cuotasFields.fechaCuota]: yup.date().required(),
   [cuotasFields.montoCuota]: yup.number().required(),
   [cuotasFields.saldoCuota]: yup.number().required(),
+  [cuotasFields.tipoCuota]: yup.number().required(),
+  [cuotasFields.estadoCuota]: yup.number().required(),
 });
 
 export const StepOne = yup.object().shape({

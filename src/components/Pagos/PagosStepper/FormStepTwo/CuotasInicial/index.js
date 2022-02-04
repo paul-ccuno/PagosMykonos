@@ -33,6 +33,7 @@ const CuotasInicial = () => {
   };
 
   useEffect(() => {
+    console.log(fechaInicioCuotas);
     if (nCuotas && fechaInicioCuotas) {
       const _nCuotasInicial = parseInt(nCuotas);
       const _cuotasInicial = new Array(_nCuotasInicial);

@@ -8,7 +8,7 @@ import format from "date-fns/format";
 import { useContext, useState } from "react";
 import { periodRegex } from "utils/regex";
 
-const CuotaInicial = ({ n, fecha, monto = 0, saldo, index }) => {
+const CuotaInicial = ({ n, fecha, monto = 0, saldo, tipo, estado, index }) => {
   const { pagos } = useContext(PagosContext);
   const { nCuotas } = useContext(CuotasContext);
   const { cuotas, setCuotas } = useContext(ListCuotasContext);

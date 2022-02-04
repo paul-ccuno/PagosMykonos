@@ -7,6 +7,7 @@ import {
   DialogTitle,
   useMediaQuery,
 } from "@mui/material";
+import TablePagosEdit from "./TablePagosEdit";
 
 const PagosEditDialog = ({
   cuotas,
@@ -31,10 +32,11 @@ const PagosEditDialog = ({
       fullScreen={fullScreen}
     >
       <DialogTitle>Modificar Cuotas</DialogTitle>
-      <DialogContent></DialogContent>
+      <DialogContent>
+        <TablePagosEdit />
+      </DialogContent>
       <DialogActions>
         <Button onClick={handleCloseDialog}>Cancelar</Button>
-        <Button>Modificar</Button>
       </DialogActions>
     </Dialog>
   );

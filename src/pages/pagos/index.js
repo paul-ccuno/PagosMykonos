@@ -2,7 +2,7 @@ import "./styles.css";
 import PagosTable from "components/Pagos/PagosTable";
 import PagosDialog from "components/Pagos/PagosDialog";
 
-import { Container, Typography, Box } from "@mui/material";
+import { Container, Typography, Box, Button } from "@mui/material";
 import { PagosProvider } from "contexts/PagosContext";
 
 const pageStyles = {
@@ -17,10 +17,11 @@ const Pagos = () => {
       <Typography variant="h4" align="center">
         Pagos
       </Typography>
-      <Box>
+      <Box sx={{ display: "flex", gap: "10px" }}>
         <PagosProvider>
           <PagosDialog />
         </PagosProvider>
+        <Button>Exportar</Button>
       </Box>
       <PagosTable />
     </Container>
