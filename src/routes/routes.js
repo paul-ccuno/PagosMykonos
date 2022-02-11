@@ -1,6 +1,9 @@
 import Clientes from "pages/clientes";
 import Login from "pages/login";
 import Pagos from "pages/pagos";
+import Mantenimiento from "pages/mantenimiento";
+import Ajustes from "pages/ajustes";
+import Usuarios from "pages/usuarios";
 
 export const publicRoutes = [
   {
@@ -22,8 +25,14 @@ export const privateRoutes = [
     element: <Pagos />,
   },
   {
+    path: "/usuarios",
+    title: "Usuarios",
+    element: <Usuarios />,
+  },
+  {
     path: "/ajustes",
     title: "Ajustes",
+    element: <Ajustes />,
   },
   {
     path: "/proyecciones",
@@ -32,5 +41,6 @@ export const privateRoutes = [
   {
     path: "/mantenimiento",
     title: "Mantenimiento",
+    element: <Mantenimiento />,
   },
 ];

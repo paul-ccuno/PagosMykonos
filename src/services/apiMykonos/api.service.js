@@ -1,6 +1,6 @@
 import axios from "axios";
-// const API = "https://inmobiliariaontario.com/api_mykonos/";
-const API = "http://localhost:3015/api_mykonos/";
+const API = "https://inmobiliariaontario.com/api_gestordepagos_mikonos/";
+// const API = "http://localhost:3015/api_mykonos/";
 
 async function send({ method, url, data }) {
   try {

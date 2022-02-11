@@ -2,7 +2,7 @@ import * as yup from "yup";
 import { EMPTY, VALID } from "./errors/es";
 
 export const usuariosFields = {
-  username: "correo",
+  username: "Email",
   password: "password",
   confirmPassword: "confirmPassword",
 };

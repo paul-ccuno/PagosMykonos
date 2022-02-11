@@ -1,8 +1,10 @@
-import { useState, createContext } from "react";
+import { useState, createContext, useContext } from "react";
 
 const PagosContext = createContext({
   pagos: {},
   setPagos: () => {},
+  isCreated: false,
+  setIsCreated: () => {},
   activeStep: 0,
   setActiveStep: () => {},
   steps: [],
@@ -13,6 +15,7 @@ const PagosContext = createContext({
 
 export const PagosProvider = ({ children }) => {
   const [pagos, setPagos] = useState({});
+  const [isCreated, setIsCreated] = useState(false);
   const [saldo, setSaldo] = useState(0);
   const [activeStep, setActiveStep] = useState(0);
   const [isDisabledNext, setIsDisabledNext] = useState(true);
@@ -21,6 +24,8 @@ export const PagosProvider = ({ children }) => {
   const value = {
     pagos,
     setPagos,
+    isCreated,
+    setIsCreated,
     saldo,
     setSaldo,
     activeStep,
@@ -34,5 +39,7 @@ export const PagosProvider = ({ children }) => {
     <PagosContext.Provider value={value}>{children}</PagosContext.Provider>
   );
 };
+
+export const usePagos = () => useContext(PagosContext);
 
 export default PagosContext;

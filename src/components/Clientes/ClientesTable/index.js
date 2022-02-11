@@ -1,35 +1,10 @@
-import { DataGridPro, GridActionsCellItem } from "@mui/x-data-grid-pro";
-import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
-
-const columns = [
-  { field: "nombre", headerName: "Nombre", type: "string", minWidth: 150 },
-  {
-    field: "direccion",
-    headerName: "Dirección",
-    type: "string",
-    minWidth: 150,
-  },
-  { field: "distrito", headerName: "Distrito", type: "string", minWidth: 150 },
-  { field: "dni", headerName: "DNI", type: "string", minWidth: 100 },
-  { field: "telefono", headerName: "Telefono", type: "string", minWidth: 150 },
-  { field: "correo", headerName: "Correo", type: "string", minWidth: 150 },
-  {
-    field: "actions",
-    type: "actions",
-    width: 100,
-    getActions: (params) => [
-      <GridActionsCellItem icon={<EditIcon />} label="Edit" />,
-      <GridActionsCellItem icon={<DeleteIcon />} label="Delete" />,
-    ],
-  },
-];
-
-const rows = [
-  {
-    id: 1,
-    nombre: "juan",
-  },
-];
+// import { DataGridPro } from "@mui/x-data-grid-pro";
+import { DataGrid } from "@mui/x-data-grid";
+import { useEffect } from "react";
+import apiMykonos from "services/apiMykonos";
+import ClientesDialogEdit from "../ClientesDialogEdit";
+import { useClientes } from "contexts/ClientesContext";
+import ClientesDialogDelete from "../ClientesDialogDelete";
 
 const styles = {
   height: "100%",
@@ -37,11 +12,69 @@ const styles = {
 };
 
 const ClientesTable = () => {
+  const { clients, setClients, isCreated, setIsCreated } = useClientes();
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(async () => {
+    const _clients = await apiMykonos.clients.getClients();
+    setClients(_clients);
+  }, []);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(async () => {
+    if (isCreated) {
+      const _clients = await apiMykonos.clients.getClients();
+      setClients(_clients);
+      setIsCreated(false);
+    }
+  }, [isCreated]);
+
   return (
     <div className="Clientes-table" style={styles}>
-      <DataGridPro
-        rows={rows}
-        columns={columns}
+      <DataGrid
+        rows={clients}
+        columns={[
+          {
+            field: "Nombres",
+            headerName: "Nombres",
+            type: "string",
+            minWidth: 150,
+          },
+          {
+            field: "Direccion",
+            headerName: "Dirección",
+            type: "string",
+            minWidth: 150,
+          },
+          {
+            field: "Distrito",
+            headerName: "Distrito",
+            type: "string",
+            minWidth: 150,
+          },
+          { field: "DNI", headerName: "DNI", type: "string", minWidth: 100 },
+          {
+            field: "Telefono",
+            headerName: "Telefono",
+            type: "string",
+            minWidth: 150,
+          },
+          {
+            field: "Email",
+            headerName: "Correo",
+            type: "string",
+            minWidth: 150,
+          },
+          {
+            field: "actions",
+            type: "actions",
+            width: 100,
+            getActions: (params) => [
+              <ClientesDialogEdit dni={params.row.DNI} />,
+              <ClientesDialogDelete client={params.row} />,
+            ],
+          },
+        ]}
         initialState={{
           pinnedColumns: {
             right: ["actions"],

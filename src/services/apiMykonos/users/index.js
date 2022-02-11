@@ -1,35 +1,35 @@
 import { del, get, post, put } from "../api.service";
 
-export const getClients = async () => {
+export const getUsers = async () => {
   try {
     const res = await get({
-      url: "clientes",
+      url: "administrador",
     });
     if (res?.status === "ERROR") throw res;
-    res.forEach((client, i) => (client.id = i));
+    res.forEach((user, i) => (user.id = i));
     return res;
   } catch (error) {
     throw error;
   }
 };
 
-export const getClient = async ({ dni }) => {
+export const getUser = async ({ dni }) => {
   try {
     const res = await get({
-      url: `clientes/buscar?DNI=${dni}`,
+      url: `administrador/buscar?DNI=${dni}`,
     });
     if (res?.status === "ERROR") throw res;
-    res.forEach((client, i) => (client.id = i));
+    res.forEach((user, i) => (user.id = i));
     return res[0];
   } catch (error) {
     throw error;
   }
 };
 
-export const createClient = async ({ data }) => {
+export const createUser = async ({ data }) => {
   try {
     const res = await post({
-      url: "clientes/register",
+      url: "administrador/create",
       data,
     });
     console.log(res);
@@ -40,7 +40,7 @@ export const createClient = async ({ data }) => {
   }
 };
 
-export const updateClient = async ({ data }) => {
+export const updateUser = async ({ data }) => {
   try {
     const res = await put({
       url: "clientes/actualizar",
@@ -54,7 +54,7 @@ export const updateClient = async ({ data }) => {
   }
 };
 
-export const deleteClient = async ({ dni }) => {
+export const deleteUser = async ({ dni }) => {
   try {
     const res = await del({
       url: `clientes/eliminar?DNI=${dni}`,

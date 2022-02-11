@@ -1,7 +1,7 @@
 import { Box, Container, Typography } from "@mui/material";
-import ClientesDialogCreate from "components/Clientes/ClientesDialogCreate";
-import ClientesTable from "components/Clientes/ClientesTable";
-import { ClientesProvider } from "contexts/ClientesContext";
+import DialogCreateUsuarios from "components/Usuarios/DialogCreateUsuarios";
+import TableUsuarios from "components/Usuarios/TableUsuarios";
+import { UsuariosProvider } from "contexts/UsuariosContext";
 
 const pageStyles = {
   paddingTop: "1em",
@@ -9,20 +9,20 @@ const pageStyles = {
   flexDirection: "column",
 };
 
-const Clientes = () => {
+const Usuarios = () => {
   return (
-    <ClientesProvider>
+    <UsuariosProvider>
       <Container className="Pagos" maxWidth="xl" style={pageStyles}>
         <Typography variant="h4" align="center">
-          Clientes
+          Usuarios
         </Typography>
         <Box sx={{ display: "flex", gap: "10px" }}>
-          <ClientesDialogCreate />
+          <DialogCreateUsuarios />
         </Box>
-        <ClientesTable />
+        <TableUsuarios />
       </Container>
-    </ClientesProvider>
+    </UsuariosProvider>
   );
 };
 
-export default Clientes;
+export default Usuarios;

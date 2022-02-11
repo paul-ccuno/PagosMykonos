@@ -3,20 +3,20 @@ import * as yup from "yup";
 import { EMPTY, VALID } from "./errors/es";
 
 export const clientesFields = {
-  nombre: "nombre",
-  direccion: "direccion",
-  distrito: "distrito",
-  dni: "dni",
-  telefono: "telefono",
-  correo: "correo",
-  coopropietario: "coopropietario",
-  telefonoCoopropietario: "telefonoCoopropietario",
+  nombre: "Nombres",
+  direccion: "Direccion",
+  distrito: "Localidad",
+  dni: "DNI",
+  telefono: "Telefono",
+  correo: "Email",
+  coopropietario: "NombreCoo",
+  telefonoCoopropietario: "TelefonoCoo",
 };
 
 const Cliente = yup.object().shape({
   [clientesFields.nombre]: yup.string().required(EMPTY.GENERAL),
   [clientesFields.direccion]: yup.string().required(EMPTY.GENERAL),
-  [clientesFields.distrito]: yup.string().required(EMPTY.GENERAL),
+  [clientesFields.distrito]: yup.number().required(EMPTY.GENERAL),
   [clientesFields.dni]: yup
     .string()
     .matches(dniRegex, VALID.DNI)
@@ -30,9 +30,7 @@ const Cliente = yup.object().shape({
     .email(VALID.EMAIL)
     .required(EMPTY.GENERAL),
   [clientesFields.coopropietario]: yup.string(),
-  [clientesFields.telefonoCoopropietario]: yup
-    .string()
-    .matches(phoneRegex, VALID.PHONE),
+  [clientesFields.telefonoCoopropietario]: yup.string(),
 });
 
 export default Cliente;
