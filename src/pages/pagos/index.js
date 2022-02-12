@@ -21,7 +21,6 @@ const Pagos = () => {
         <PagosProvider>
           <PagosDialog />
         </PagosProvider>
-        <Button>Exportar</Button>
       </Box>
       <PagosTable />
     </Container>

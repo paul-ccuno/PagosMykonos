@@ -2,6 +2,7 @@ import "./styles.css";
 import { Button } from "reactstrap";
 import React, { Fragment, useState } from "react";
 import { useSnackbar } from "contexts/SnackbarContext";
+import { Typography } from "@mui/material";
 
 function Ajustes() {
   const [datos, setDatos] = useState({
@@ -27,29 +28,33 @@ function Ajustes() {
   const { openSnackbar } = useSnackbar();
 
   return (
-    <Fragment>
-      <h1>Ajustes</h1>
-      <label>Tipo de cambio 1 USD a Sol</label>
-      <form className="row" onSubmit={enviarDatos}>
-        <div className="col-md-3">
-          <input
-            type="text"
-            placeholder="Tipo de cambio"
-            className="form-control"
-            onChange={handleInputChange}
-            name="cambio"
-            value={datos.cambio}
-          ></input>
-        </div>
-        <Button
-          type="submit"
-          color="success"
-          className="btn btn-primary  col-auto"
-        >
-          Enviar
-        </Button>
-      </form>
-    </Fragment>
+    <div class="detallesAjustes">
+      <Fragment>
+        <Typography variant="h4" align="center">
+          Ajustes
+        </Typography>
+        <label>Tipo de cambio 1 USD a Sol</label>
+        <form className="row" onSubmit={enviarDatos}>
+          <div className="col-md-3">
+            <input
+              type="text"
+              placeholder="Tipo de cambio"
+              className="form-control"
+              onChange={handleInputChange}
+              name="cambio"
+              value={datos.cambio}
+            ></input>
+          </div>
+          <Button
+            type="submit"
+            color="success"
+            className="btn btn-primary  col-auto"
+          >
+            Enviar
+          </Button>
+        </form>
+      </Fragment>
+    </div>
   );
 }
 

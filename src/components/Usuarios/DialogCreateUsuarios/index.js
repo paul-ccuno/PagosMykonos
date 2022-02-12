@@ -80,15 +80,38 @@ const DialogCreateUsuarios = () => {
             >
               <TextField
                 {...textFieldStyles}
+                {...register(usuariosFields.name)}
+                label="Nombre"
+                error={errors[usuariosFields.name]?.message && true}
+                helperText={errors[usuariosFields.name]?.message}
+              />
+              <TextField
+                {...textFieldStyles}
+                {...register(usuariosFields.lastName)}
+                label="Apellido"
+                error={errors[usuariosFields.lastName]?.message && true}
+                helperText={errors[usuariosFields.lastName]?.message}
+              />
+              <TextField
+                {...textFieldStyles}
+                {...register(usuariosFields.dni)}
+                label="DNI"
+                error={errors[usuariosFields.dni]?.message && true}
+                helperText={errors[usuariosFields.dni]?.message}
+              />
+              <TextField
+                {...textFieldStyles}
                 {...register(usuariosFields.username)}
                 label="Correo electronico"
                 error={errors[usuariosFields.username]?.message && true}
                 helperText={errors[usuariosFields.username]?.message}
               />
+
               <TextField
                 {...textFieldStyles}
                 {...register(usuariosFields.password)}
                 label="Contraseña"
+                type="password"
                 error={errors[usuariosFields.password]?.message && true}
                 helperText={errors[usuariosFields.password]?.message}
               />
@@ -96,6 +119,7 @@ const DialogCreateUsuarios = () => {
                 {...textFieldStyles}
                 {...register(usuariosFields.confirmPassword)}
                 label="Confirmar contraseña"
+                type="password"
                 error={errors[usuariosFields.confirmPassword]?.message && true}
                 helperText={errors[usuariosFields.confirmPassword]?.message}
               />

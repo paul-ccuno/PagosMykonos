@@ -1,11 +1,22 @@
 import { del, get, post, put } from "../api.service";
 
-export const getClients = async () => {
+export const getClients = async (data = false) => {
   try {
     const res = await get({
       url: "clientes",
     });
     if (res?.status === "ERROR") throw res;
+    if (data) {
+      const customRes = new Array(res.length);
+      res.forEach((client, i) => {
+        customRes[i] = {
+          id: client.DNI,
+          label: client.Nombres,
+        };
+      });
+      console.log(customRes);
+      return customRes;
+    }
     res.forEach((client, i) => (client.id = i));
     return res;
   } catch (error) {

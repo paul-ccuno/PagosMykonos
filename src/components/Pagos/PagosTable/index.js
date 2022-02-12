@@ -8,6 +8,8 @@ import {
 } from "@mui/icons-material";
 import { useState } from "react";
 import PagosEditDialog from "../PagosEditDialog";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const rows = [
   {
@@ -63,6 +65,17 @@ const PagosTable = () => {
   const handleShowDeleteDialog = (params) => {
     setOpenDeleteDialog(true);
   };
+  const DownloadPdf = () => {
+    const doc = new jsPDF();
+    doc.text("Gestor de pagos", 14, 10);
+    doc.autoTable({
+      //columns:field.map(col=>({title:col.headerName,dataKey:col.field})),
+      body: rows.map((row) => Object.values(row)),
+    });
+    doc.save("table.pdf");
+  };
+  const DownloadExcel = () => {};
+
   return (
     <div className="Pagos-table">
       <DataGridPro
@@ -106,6 +119,12 @@ const PagosTable = () => {
             minWidth: 130,
           },
           {
+            field: "estadoPago",
+            headerName: "Estado pago",
+            type: "date",
+            minWidth: 130,
+          },
+          {
             field: "cuotasVencidas",
             headerName: "Cuotas vencidas",
             type: "number",
@@ -122,8 +141,16 @@ const PagosTable = () => {
             type: "actions",
             width: 150,
             getActions: (params) => [
-              <GridActionsCellItem icon={<LibraryBooksIcon />} label="Excel" />,
-              <GridActionsCellItem icon={<PictureAsPdfIcon />} label="Pdf" />,
+              <GridActionsCellItem
+                icon={<LibraryBooksIcon />}
+                label="Excel"
+                onClick={() => DownloadExcel()}
+              />,
+              <GridActionsCellItem
+                icon={<PictureAsPdfIcon />}
+                label="Pdf"
+                onClick={() => DownloadPdf()}
+              />,
               <PagosEditDialog pago={params.row} />,
               <GridActionsCellItem
                 icon={<DeleteIcon />}

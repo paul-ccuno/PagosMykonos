@@ -36,10 +36,28 @@ const TableUsuarios = () => {
         rows={users}
         columns={[
           {
+            field: [usuariosFields.name],
+            headerName: "Nombres",
+            type: "string",
+            minWidth: 250,
+          },
+          {
+            field: [usuariosFields.lastName],
+            headerName: "Apellidos",
+            type: "string",
+            minWidth: 250,
+          },
+          {
+            field: [usuariosFields.dni],
+            headerName: "DNI",
+            type: "string",
+            minWidth: 150,
+          },
+          {
             field: [usuariosFields.username],
             headerName: "Correo electrónico",
             type: "string",
-            minWidth: 200,
+            minWidth: 300,
           },
           {
             field: "actions",
@@ -47,7 +65,7 @@ const TableUsuarios = () => {
             type: "actions",
             minWidth: 100,
             getActions: (params) => [
-              <DialogEditUsuarios />,
+              <DialogEditUsuarios user={params.row} />,
               <DialogDeleteUsuarios />,
             ],
           },

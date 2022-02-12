@@ -1,5 +1,6 @@
 import "./styles.css";
 import { useState } from "react";
+import { Typography } from "@mui/material";
 import {
   FormGroup,
   ModalFooter,
@@ -123,7 +124,10 @@ function Mantenimiento() {
 
   return (
     <div className="detallesSolicitudLote">
-      <h2 id="terrenos">Terrenos</h2>
+      <Typography variant="h4" align="center">
+        Terrenos
+      </Typography>
+
       <Button
         id="insertar"
         color="success"

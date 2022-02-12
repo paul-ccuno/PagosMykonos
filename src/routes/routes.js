@@ -4,6 +4,7 @@ import Pagos from "pages/pagos";
 import Mantenimiento from "pages/mantenimiento";
 import Ajustes from "pages/ajustes";
 import Usuarios from "pages/usuarios";
+import Proyecciones from "pages/proyecciones";
 
 export const publicRoutes = [
   {
@@ -37,6 +38,7 @@ export const privateRoutes = [
   {
     path: "/proyecciones",
     title: "Proyecciones",
+    element: <Proyecciones />,
   },
   {
     path: "/mantenimiento",

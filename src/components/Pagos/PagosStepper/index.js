@@ -9,9 +9,6 @@ import {
   Box,
   Button,
 } from "@mui/material";
-import FormStepOne from "./FormStepOne";
-import FormStepTwo from "./FormStepTwo";
-import { CuotasProvider } from "contexts/PagosContext/CuotasContext";
 import PagosContext from "contexts/PagosContext";
 
 export const PagosStepper = () => {

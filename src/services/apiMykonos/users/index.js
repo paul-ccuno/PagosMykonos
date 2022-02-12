@@ -43,7 +43,7 @@ export const createUser = async ({ data }) => {
 export const updateUser = async ({ data }) => {
   try {
     const res = await put({
-      url: "clientes/actualizar",
+      url: "clientes/password",
       data,
     });
     console.log(res);

@@ -9,4 +9,5 @@ export const VALID = {
   EMAIL: "Ingrese un correo electrónico válido",
   PHONE: "Ingrese un teléfono válido",
   PASSWORD: "La contraseña debe tener más de 6 caracteres",
+  CONFIRMPASSWORD: "Debe coincidir con la contraseña",
 };

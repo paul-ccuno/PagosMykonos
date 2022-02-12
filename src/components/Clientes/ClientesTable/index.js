@@ -1,5 +1,5 @@
-// import { DataGridPro } from "@mui/x-data-grid-pro";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGridPro } from "@mui/x-data-grid-pro";
+// import { DataGrid } from "@mui/x-data-grid";
 import { useEffect } from "react";
 import apiMykonos from "services/apiMykonos";
 import ClientesDialogEdit from "../ClientesDialogEdit";
@@ -31,7 +31,7 @@ const ClientesTable = () => {
 
   return (
     <div className="Clientes-table" style={styles}>
-      <DataGrid
+      <DataGridPro
         rows={clients}
         columns={[
           {

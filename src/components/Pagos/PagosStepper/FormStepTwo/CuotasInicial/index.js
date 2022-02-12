@@ -27,7 +27,7 @@ const CuotasInicial = () => {
     const resStepTwo = {
       [pagosFields.cantidadCuotasMontoInicial]: nCuotas,
       [pagosFields.fechaInicioCuotasMontoInicial]: fechaInicioCuotas,
-      [pagosFields.cuotasMontoInicial]: cuotas,
+      [pagosFields.cuotasInicial]: cuotas,
     };
     setPagos({ ...pagos, ...resStepTwo });
   };
@@ -45,7 +45,7 @@ const CuotasInicial = () => {
       _cuotasInicial[0].n = 1;
       _cuotasInicial[0].fecha = date;
       _cuotasInicial[0].monto = 0;
-      _cuotasInicial[0].saldo = pagos.precio;
+      _cuotasInicial[0].saldo = pagos[pagosFields.precio];
 
       for (let i = 1; i < _nCuotasInicial; i++) {
         _cuotasInicial[i] = {};
@@ -64,14 +64,14 @@ const CuotasInicial = () => {
         _cuotasInicial[i].n = i + 1;
         _cuotasInicial[i].fecha = date;
         _cuotasInicial[i].monto = 0;
-        _cuotasInicial[i].saldo = pagos.precio;
+        _cuotasInicial[i].saldo = pagos[pagosFields.precio];
       }
       setCuotas(_cuotasInicial);
     }
   }, [nCuotas, fechaInicioCuotas]);
 
   useEffect(() => {
-    setCuotas(pagos[pagosFields.cuotasMontoInicial] || []);
+    setCuotas(pagos[pagosFields.cuotasInicial] || []);
   }, []);
 
   useEffect(() => {

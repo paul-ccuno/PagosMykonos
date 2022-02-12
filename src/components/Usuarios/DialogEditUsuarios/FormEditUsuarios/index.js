@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useClientes } from "contexts/ClientesContext";
 import { useSnackbar } from "contexts/SnackbarContext";
-import Usuario, { usuariosFields } from "models/Usuarios.model";
+import { usuariosFields, UsuarioUpdate } from "models/Usuarios.model";
 import { useForm } from "react-hook-form";
 import apiMykonos from "services/apiMykonos";
 
@@ -10,20 +10,23 @@ import {
   DialogActions,
   DialogTitle,
   TextField,
+  Button,
 } from "@mui/material";
 import { textFieldStyles } from "components/General/TextField";
 
 const FormEditUsuarios = ({ setOpen, user, handleCloseDialog }) => {
   const { openSnackbar } = useSnackbar();
   const { setIsCreated } = useClientes();
-
+  console.log(user);
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(Usuario),
+    resolver: yupResolver(UsuarioUpdate),
+    defaultValues: {
+      [usuariosFields.dni]: user[usuariosFields.dni],
+    },
   });
 
   const handleSubmitUpdate = async (values) => {
@@ -32,17 +35,20 @@ const FormEditUsuarios = ({ setOpen, user, handleCloseDialog }) => {
       console.log(res);
       setIsCreated(true);
       setOpen(false);
-      openSnackbar({ text: "Cliente modificado correctamente" });
+      openSnackbar({ text: "Usuario modificado correctamente" });
     } catch (error) {
       console.error(error);
-      openSnackbar({ severety: "error", text: "Error al modificar cliente" });
+      openSnackbar({ severety: "error", text: "Error al modificar usuario" });
     }
   };
 
   return (
     <form onSubmit={handleSubmit(handleSubmitUpdate)}>
       <DialogTitle>
-        Modificar Cliente <b>{user[usuariosFields.dni]}</b>
+        Modificar Usuario{" "}
+        <b>
+          {user[usuariosFields.name]} {user[usuariosFields.lastName]}
+        </b>
       </DialogTitle>
       <DialogContent
         sx={{
@@ -54,13 +60,35 @@ const FormEditUsuarios = ({ setOpen, user, handleCloseDialog }) => {
       >
         <TextField
           {...textFieldStyles}
-          {...register(usuariosFields.nombre)}
+          {...register(usuariosFields.password)}
           label="Contraseña actual"
-          error={errors[usuariosFields.nombre]?.message && true}
-          helperText={errors[usuariosFields.nombre]?.message}
+          type="password"
+          error={errors[usuariosFields.password]?.message && true}
+          helperText={errors[usuariosFields.password]?.message}
+        />
+        <TextField
+          {...textFieldStyles}
+          {...register(usuariosFields.newPassword)}
+          label="Nueva contraseña"
+          type="password"
+          error={errors[usuariosFields.newPassword]?.message && true}
+          helperText={errors[usuariosFields.newPassword]?.message}
+        />
+        <TextField
+          {...textFieldStyles}
+          {...register(usuariosFields.confirmNewPassword)}
+          label="Confirmación de nueva contraseña"
+          type="password"
+          error={errors[usuariosFields.confirmNewPassword]?.message && true}
+          helperText={errors[usuariosFields.confirmNewPassword]?.message}
         />
       </DialogContent>
-      <DialogActions></DialogActions>
+      <DialogActions>
+        <Button onClick={handleCloseDialog}>Cancelar</Button>
+        <Button type="submit" variant="contained" color="success">
+          Enviar
+        </Button>
+      </DialogActions>
     </form>
   );
 };

@@ -2,19 +2,15 @@ import { Edit } from "@mui/icons-material";
 import { Dialog, useMediaQuery, useTheme } from "@mui/material";
 import { GridActionsCellItem } from "@mui/x-data-grid-pro";
 import { useState } from "react";
-import apiMykonos from "services/apiMykonos";
 import FormEditUsuarios from "./FormEditUsuarios";
 
-const DialogEditUsuarios = ({ id }) => {
+const DialogEditUsuarios = ({ user }) => {
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState({});
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleOpenDialog = async () => {
-    const _user = await apiMykonos.users.getUser({ id });
-    setUser(_user);
     setOpen(true);
   };
 

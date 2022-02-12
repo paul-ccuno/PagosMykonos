@@ -1,40 +1,46 @@
-import { Button, DialogActions, TextField, Autocomplete } from "@mui/material";
+import { TextField, Autocomplete } from "@mui/material";
 import { textFieldStyles } from "components/General/TextField";
 import { pagosFields } from "models/Pagos.model";
 import { useContext, useEffect, useState } from "react";
 import { periodRegex } from "utils/regex";
 import PagosContext from "contexts/PagosContext";
 
-const clientes = [
-  { label: "Cliente 1", id: 1 },
-  { label: "Cliente 2", id: 2 },
-  { label: "Cliente 3", id: 2 },
+const proyectos = [{ id: 1, label: "Mykonos" }];
+
+const divisas = [
+  { id: 1, label: "Dolar" },
+  { id: 2, label: "Sol" },
 ];
 
-const proyectos = [{ label: "Mykonos", id: 1 }];
-
-const lotes = [
-  { id: "A-1", label: "A-1", precio: 12312.2 },
-  { id: "A-2", label: "A-2", precio: 14351.1 },
-  { id: "A-3", label: "A-3", precio: 12345.6 },
-  { id: "B-1", label: "B-1", precio: 17432.9 },
-  { id: "B-2", label: "B-2", precio: 19020.54 },
-  { id: "B-3", label: "B-3", precio: 58402.5 },
-  { id: "B-4", label: "B-4", precio: 43121.4 },
-];
-
-const FormStepOne = () => {
-  const { pagos, setPagos, steps, setSteps, setIsDisabledNext } =
-    useContext(PagosContext);
+const FormStepOne = ({ clients, lots, dolar }) => {
+  const { pagos, setPagos, setIsDisabledNext } = useContext(PagosContext);
 
   const [cliente, setCliente] = useState(pagos[pagosFields.cliente] || "");
-  const [proyecto, setProyecto] = useState(pagos[pagosFields.proyecto] || "");
+  const [proyecto, setProyecto] = useState(pagos[pagosFields.proyecto] || 1);
   const [lote, setLote] = useState(pagos[pagosFields.lote] || "");
-  const [precio, setPrecio] = useState(pagos[pagosFields.precio] || "");
+  const [moneda, setMoneda] = useState(pagos[pagosFields.moneda] || 1);
+  const [precio, setPrecio] = useState(
+    moneda === 2
+      ? pagos[pagosFields.precio] / dolar
+      : pagos[pagosFields.precio] || 0
+  );
+
+  const [defaultCliente] = useState(
+    clients.find(({ id }) => cliente === id) || null
+  );
+  const [defaultProyecto] = useState(
+    proyectos.find(({ id }) => proyecto === id) || 1
+  );
+  const [defaultLote] = useState(
+    lots.find(({ id }) => lote === id) || undefined
+  );
+  const [defaultMoneda] = useState(
+    divisas.find(({ id }) => moneda === id) || 1
+  );
 
   useEffect(() => {
-    console.log(lote);
-  }, [lote]);
+    console.log("moneda", moneda);
+  }, [moneda]);
 
   const handleFormStepOneForm = () => {
     // e.preventDefault();
@@ -42,7 +48,8 @@ const FormStepOne = () => {
       [pagosFields.cliente]: cliente,
       [pagosFields.proyecto]: proyecto,
       [pagosFields.lote]: lote,
-      [pagosFields.precio]: parseFloat(precio),
+      [pagosFields.moneda]: moneda,
+      [pagosFields.precio]: moneda === 2 ? +precio * dolar : +precio,
     };
 
     setPagos({ ...resStepOne });
@@ -56,40 +63,50 @@ const FormStepOne = () => {
       return;
     }
     setIsDisabledNext(true);
-  }, [cliente, proyecto, lote, precio]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cliente, proyecto, lote, precio, moneda]);
 
   return (
     <form>
       <Autocomplete
-        options={clientes}
+        options={clients}
         onChange={(_, data) => {
           setCliente(data?.id);
         }}
-        defaultValue={clientes.find(({ id }) => cliente === id)}
+        defaultValue={defaultCliente}
         renderInput={(params) => (
           <TextField {...params} {...textFieldStyles} label="Cliente" />
         )}
       />
-
       <Autocomplete
         options={proyectos}
         onChange={(_, data) => {
           setProyecto(data?.id);
         }}
-        defaultValue={proyectos.find(({ id }) => proyecto === id)}
+        defaultValue={defaultProyecto}
         renderInput={(params) => (
           <TextField {...params} {...textFieldStyles} label="Proyecto" />
         )}
       />
       <Autocomplete
-        options={lotes}
+        options={lots}
         onChange={(_, data) => {
           setLote(data?.id);
-          setPrecio(data?.precio.toString());
+          setPrecio(+data?.precio);
         }}
-        defaultValue={lotes.find(({ id }) => lote === id)}
+        defaultValue={defaultLote}
         renderInput={(params) => (
           <TextField {...params} {...textFieldStyles} label="Lote" />
+        )}
+      />
+      <Autocomplete
+        options={divisas}
+        onChange={(_, data) => {
+          setMoneda(data?.id);
+        }}
+        defaultValue={defaultMoneda}
+        renderInput={(params) => (
+          <TextField {...params} {...textFieldStyles} label="Moneda" />
         )}
       />
       <TextField
