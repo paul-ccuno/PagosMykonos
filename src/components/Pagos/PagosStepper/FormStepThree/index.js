@@ -17,10 +17,10 @@ const FormStepThree = () => {
   const { pagos, endFechaInicial } = usePagos();
 
   useEffect(() => {
-    // setNCuotas(pagos[pagosFields.cantidadCuotasFinanciar] || "");
-    // setFechaInicioCuotas(
-    //   pagos[pagosFields.fechaInicioCuotasFinanciar] || endFechaInicial
-    // );
+    setNCuotas(pagos[pagosFields.cantidadCuotasFinanciar] || "");
+    setFechaInicioCuotas(
+      pagos[pagosFields.fechaInicioCuotasFinanciar] || endFechaInicial
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -36,7 +36,7 @@ const FormStepThree = () => {
           }
           if (integerRegex.test(value)) setNCuotas(value);
         }}
-        defaultValue={nCuotas}
+        value={nCuotas}
         helperText="Debe ingresar un numero menor a 100"
       />
       <TextField
@@ -49,9 +49,7 @@ const FormStepThree = () => {
           date.setDate(date.getDate() + 1);
           setFechaInicioCuotas(date);
         }}
-        defaultValue={
-          fechaInicioCuotas && format(fechaInicioCuotas, "yyyy-MM-dd")
-        }
+        value={fechaInicioCuotas && format(fechaInicioCuotas, "yyyy-MM-dd")}
       />
 
       <ListCuotasFinanciarProvider>

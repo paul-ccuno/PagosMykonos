@@ -21,8 +21,7 @@ import CuotaFinanciar from "./CuotaFinanciar";
 
 const CuotasFinanciar = () => {
   const { cuotas, setCuotas } = useListCuotasFinanciar();
-  const { nCuotas, fechaInicioCuotas, totalMonto, setTotalMonto } =
-    useCuotasFinanciar();
+  const { nCuotas, fechaInicioCuotas, setTotalMonto } = useCuotasFinanciar();
   const { pagos, setPagos, setIsDisabledNext, saldoFinanciar } = usePagos();
 
   const handleNextStepThreeForm = () => {
@@ -85,8 +84,14 @@ const CuotasFinanciar = () => {
   }, []);
 
   useEffect(() => {
-    if (nCuotas && fechaInicioCuotas && cuotas.length) {
+    if (nCuotas && fechaInicioCuotas && cuotas.length === +nCuotas) {
       console.log("pagos", pagos);
+      for (let i = 0; i < +nCuotas; i++) {
+        if (!cuotas[i][cuotasFields.monto]) {
+          setIsDisabledNext(true);
+          return;
+        }
+      }
       handleNextStepThreeForm();
       setIsDisabledNext(false);
       return;
@@ -107,7 +112,7 @@ const CuotasFinanciar = () => {
 
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small">
+      <Table size="small">
         <TableHead>
           <TableRow>
             <TableCell>#</TableCell>
@@ -120,13 +125,6 @@ const CuotasFinanciar = () => {
           {cuotas.map(({ ...props }, i) => (
             <CuotaFinanciar key={props.n} {...props} index={i} />
           ))}
-          <TableRow>
-            <TableCell colSpan={2} align="right">
-              Total
-            </TableCell>
-            <TableCell>{totalMonto}</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>

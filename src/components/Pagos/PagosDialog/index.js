@@ -15,8 +15,8 @@ import FormStepOne from "../PagosStepper/FormStepOne";
 import { CuotasInicialProvider } from "contexts/PagosContext/CuotasInicialContext";
 import FormStepTwo from "../PagosStepper/FormStepTwo";
 import apiMykonos from "services/apiMykonos";
-// import FormStepThree from "../PagosStepper/FormStepThree";
-// import { CuotasFinanciarProvider } from "contexts/PagosContext/CuotasFinanciarContext";
+import FormStepThree from "../PagosStepper/FormStepThree";
+import { CuotasFinanciarProvider } from "contexts/PagosContext/CuotasFinanciarContext";
 
 const PagosDialog = () => {
   const [open, setOpen] = useState(false);
@@ -41,7 +41,7 @@ const PagosDialog = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleOpenDialog = async () => {
     const _clients = await apiMykonos.clients.getClients(true);
@@ -66,10 +66,9 @@ const PagosDialog = () => {
       {
         label: "Cuotas a financiar",
         component: (
-          <></>
-          // <CuotasFinanciarProvider>
-          //   <FormStepThree />
-          // </CuotasFinanciarProvider>
+          <CuotasFinanciarProvider>
+            <FormStepThree />
+          </CuotasFinanciarProvider>
         ),
       },
     ];
@@ -96,7 +95,7 @@ const PagosDialog = () => {
           className="PagosDialog"
           open={open}
           onClose={handleCloseDialog}
-          maxWidth="md"
+          maxWidth="sm"
           fullWidth={true}
           fullScreen={fullScreen}
         >
@@ -109,10 +108,17 @@ const PagosDialog = () => {
             <Button disabled={activeStep === 0} onClick={handleBack}>
               Atras
             </Button>
-
-            <Button onClick={handleNext} disabled={isDisabledNext}>
-              {activeStep === steps.length - 1 ? "Enviar" : "Siguiente"}
-            </Button>
+            {activeStep === steps.length ? (
+              <Button variant="contained">Enviar</Button>
+            ) : (
+              <Button
+                onClick={handleNext}
+                disabled={isDisabledNext}
+                variant="contained"
+              >
+                {activeStep === steps.length - 1 ? "Finalizar" : "Siguiente"}
+              </Button>
+            )}
           </DialogActions>
         </Dialog>
       )}

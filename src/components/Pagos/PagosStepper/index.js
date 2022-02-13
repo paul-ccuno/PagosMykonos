@@ -9,10 +9,11 @@ import {
   Box,
   Button,
 } from "@mui/material";
-import PagosContext from "contexts/PagosContext";
+import { usePagos } from "contexts/PagosContext";
+import { pagosFields } from "models/Pagos.model";
 
 export const PagosStepper = () => {
-  const { activeStep, steps } = useContext(PagosContext);
+  const { activeStep, steps, pagos } = usePagos();
 
   return (
     <Box className="PagosStepper" sx={{ width: "100%" }}>
@@ -30,11 +31,12 @@ export const PagosStepper = () => {
       {activeStep === steps.length ? (
         <>
           <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
-            {steps[activeStep]?.label || ""}
+            Resumen
           </Typography>
-          <Box>
-            <Button>REset</Button>
-          </Box>
+          <Typography variant="body1" sx={{ mt: 2, mb: 1 }}>
+            <b>Cliente: </b>
+            {pagos[pagosFields.cliente]}
+          </Typography>
         </>
       ) : (
         <>

@@ -28,11 +28,16 @@ function put({ url, data }) {
   return send({ method: "PUT", url, data });
 }
 
+function patch({ url, data }) {
+  return send({ method: "PATCH", url, data });
+}
+
 function del({ url, data }) {
   return send({ method: "DELETE", url, data });
 }
 
-function get({ url, data = {} }) {
+function get({ url, data = {}, body = false }) {
+  if (body) return send({ method: "GET", url, data });
   const params = Object.keys(data)
     .map((key) => `${key}=${data[key]}`)
     .join("&");
@@ -43,4 +48,4 @@ function get({ url, data = {} }) {
   });
 }
 
-export { get, post, put, del };
+export { get, post, put, del, patch };

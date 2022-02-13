@@ -1,4 +1,4 @@
-import { del, get, post, put } from "../api.service";
+import { del, get, patch, post } from "../api.service";
 
 export const getContracts = async () => {
   try {
@@ -16,7 +16,11 @@ export const getContracts = async () => {
 export const getContract = async ({ id }) => {
   try {
     const res = await get({
-      url: `contratos/buscar?DNI=${id}`,
+      url: `contratos/espercifico`,
+      data: {
+        idContrato: id,
+      },
+      body: true,
     });
     if (res?.status === "ERROR") throw res;
     res.forEach((contract, i) => (contract.id = contract.idContrato));
@@ -29,7 +33,7 @@ export const getContract = async ({ id }) => {
 export const createContract = async ({ data }) => {
   try {
     const res = await post({
-      url: "contratos/create",
+      url: "contratos/prueba",
       data,
     });
     console.log(res);
@@ -40,10 +44,10 @@ export const createContract = async ({ data }) => {
   }
 };
 
-export const updateContract = async ({ data }) => {
+export const updateCuota = async ({ data }) => {
   try {
-    const res = await put({
-      url: "contratos/actualizar",
+    const res = await patch({
+      url: "pagos/update",
       data,
     });
     console.log(res);
@@ -57,7 +61,8 @@ export const updateContract = async ({ data }) => {
 export const deleteContract = async ({ id }) => {
   try {
     const res = await del({
-      url: `contratos/eliminar?DNI=${id}`,
+      url: `contratos/delete`,
+      data: { idContrato: id },
     });
     console.log(res);
     if (res?.status === "ERROR") throw res;

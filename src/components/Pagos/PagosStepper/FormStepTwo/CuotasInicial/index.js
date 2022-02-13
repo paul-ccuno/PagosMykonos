@@ -8,12 +8,12 @@ import {
   Paper,
 } from "@mui/material";
 import { usePagos } from "contexts/PagosContext";
-import CuotasInicialContext, {
+import {
   useCuotasInicial,
   useListCuotasInicial,
 } from "contexts/PagosContext/CuotasInicialContext";
 import { cuotasFields, pagosFields } from "models/Pagos.model";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { roundJS } from "utils/cuotas";
 
 import { getDateSameDayNextMonth } from "utils/date";
@@ -39,20 +39,25 @@ const CuotasInicial = () => {
       [pagosFields.cuotasInicial]: cuotas,
     };
     setPagos({ ...pagos, ...resStepTwo });
-    // setSaldoFinanciar(cuotas[nCuotas - 1][cuotasFields.saldo]);
+    setSaldoFinanciar(cuotas[nCuotas - 1][cuotasFields.saldo]);
 
-    // const currentDate = cuotas[nCuotas - 1][cuotasFields.fecha];
-    // const nextDate = getDateSameDayNextMonth(
-    //   currentDate.getFullYear(),
-    //   currentDate.getMonth(),
-    //   currentDate.getDate(),
-    //   currentDate.getDate()
-    // );
-    // setEndFechaInicial(nextDate);
+    const currentDate = cuotas[nCuotas - 1][cuotasFields.fecha];
+    const nextDate = getDateSameDayNextMonth(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate(),
+      currentDate.getDate()
+    );
+    setEndFechaInicial(nextDate);
   };
 
   useEffect(() => {
-    if (nCuotas && fechaInicioCuotas && !pagos[pagosFields.cuotasInicial]) {
+    if (
+      nCuotas &&
+      fechaInicioCuotas &&
+      (nCuotas !== pagos[pagosFields.cantidadCuotasInicial] ||
+        fechaInicioCuotas !== pagos[pagosFields.fechaInicioCuotasInicial])
+    ) {
       const _nCuotasInicial = parseInt(nCuotas);
       const _cuotasInicial = new Array(_nCuotasInicial);
 
@@ -84,17 +89,24 @@ const CuotasInicial = () => {
         _cuotasInicial[i][cuotasFields.monto] = 0;
         _cuotasInicial[i][cuotasFields.saldo] = pagos[pagosFields.precio];
       }
-      setCuotas(_cuotasInicial);
+      setCuotas([..._cuotasInicial]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nCuotas, fechaInicioCuotas]);
 
   useEffect(() => {
     setCuotas(pagos[pagosFields.cuotasInicial] || []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (nCuotas && fechaInicioCuotas && cuotas.length) {
+    if (nCuotas && fechaInicioCuotas && cuotas.length === +nCuotas) {
+      for (let i = 0; i < +nCuotas; i++) {
+        if (!cuotas[i][cuotasFields.monto]) {
+          setIsDisabledNext(true);
+          return;
+        }
+      }
       console.log("pagos", pagos);
 
       handleNextStepTwoForm();
@@ -117,7 +129,7 @@ const CuotasInicial = () => {
 
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small">
+      <Table size="small">
         <TableHead>
           <TableRow>
             <TableCell>#</TableCell>
@@ -127,11 +139,9 @@ const CuotasInicial = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {(pagos[pagosFields.cuotasInicial] || cuotas).map(
-            ({ ...props }, i) => (
-              <CuotaInicial key={props.n} {...props} index={i} />
-            )
-          )}
+          {cuotas.map(({ ...props }, i) => (
+            <CuotaInicial key={props.n} {...props} index={i} />
+          ))}
           <TableRow>
             <TableCell colSpan={2} align="right">
               Total

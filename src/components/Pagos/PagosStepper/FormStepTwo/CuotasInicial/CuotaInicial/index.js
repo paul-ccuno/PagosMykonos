@@ -10,7 +10,6 @@ import { periodRegex } from "utils/regex";
 const CuotaInicial = ({ n, fecha, monto = 0, saldo, tipo, estado, index }) => {
   const { pagos } = usePagos();
   const { cuotas, setCuotas } = useListCuotasInicial();
-  console.log("cuotainicial", monto, saldo);
 
   const handleChangeMount = ({ target: { value } }) => {
     if (!value) {
@@ -34,6 +33,7 @@ const CuotaInicial = ({ n, fecha, monto = 0, saldo, tipo, estado, index }) => {
       <TableCell>
         <TextField
           {...textFieldStyles}
+          inputProps={{ style: { height: "1em" } }}
           type="date"
           onChange={({ target: { value } }) => {
             const _date = new Date(value);
@@ -49,6 +49,7 @@ const CuotaInicial = ({ n, fecha, monto = 0, saldo, tipo, estado, index }) => {
       <TableCell>
         <TextField
           {...textFieldStyles}
+          inputProps={{ style: { height: "1em" } }}
           value={monto || ""}
           type="number"
           onChange={handleChangeMount}

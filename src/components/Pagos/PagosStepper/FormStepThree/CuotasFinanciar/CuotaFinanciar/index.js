@@ -3,8 +3,8 @@ import { textFieldStyles } from "components/General/TextField";
 import { usePagos } from "contexts/PagosContext";
 import { useListCuotasFinanciar } from "contexts/PagosContext/CuotasFinanciarContext";
 import format from "date-fns/format";
-import { useEffect } from "react";
-import { calcCuotas, editarCouta } from "utils/cuotas";
+
+import { editarCouta } from "utils/cuotas";
 import { periodRegex } from "utils/regex";
 
 const CuotaFinanciar = ({
@@ -39,24 +39,11 @@ const CuotaFinanciar = ({
   return (
     <TableRow>
       <TableCell>{n}</TableCell>
+      <TableCell>{format(fecha, "yyyy-MM-dd")}</TableCell>
       <TableCell>
         <TextField
           {...textFieldStyles}
-          type="date"
-          onChange={({ target: { value } }) => {
-            const _date = new Date(value);
-            _date.setDate(_date.getDate() + 1);
-            // setDate(format(_date, "yyyy-MM-dd"));
-            const _cuotasFinanciar = cuotas;
-            _cuotasFinanciar[index].fecha = _date;
-            setCuotas([..._cuotasFinanciar]);
-          }}
-          value={format(fecha, "yyyy-MM-dd")}
-        />
-      </TableCell>
-      <TableCell>
-        <TextField
-          {...textFieldStyles}
+          inputProps={{ style: { height: "1em" } }}
           value={monto || ""}
           type="number"
           onChange={handleChangeMount}
