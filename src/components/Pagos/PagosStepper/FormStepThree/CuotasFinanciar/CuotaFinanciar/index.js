@@ -1,31 +1,39 @@
 import { TableCell, TableRow, TextField } from "@mui/material";
 import { textFieldStyles } from "components/General/TextField";
 import { usePagos } from "contexts/PagosContext";
-import { useListCuotasInicial } from "contexts/PagosContext/CuotasInicialContext";
+import { useListCuotasFinanciar } from "contexts/PagosContext/CuotasFinanciarContext";
 import format from "date-fns/format";
-import { pagosFields } from "models/Pagos.model";
-import { calcCuotas } from "utils/cuotas";
+import { useEffect } from "react";
+import { calcCuotas, editarCouta } from "utils/cuotas";
 import { periodRegex } from "utils/regex";
 
-const CuotaInicial = ({ n, fecha, monto = 0, saldo, tipo, estado, index }) => {
-  const { pagos } = usePagos();
-  const { cuotas, setCuotas } = useListCuotasInicial();
-  console.log("cuotainicial", monto, saldo);
+const CuotaFinanciar = ({
+  n,
+  fecha,
+  monto = 0,
+  saldo,
+  tipo,
+  estado,
+  index,
+}) => {
+  const { saldoFinanciar } = usePagos();
+  const { cuotas, setCuotas } = useListCuotasFinanciar();
 
   const handleChangeMount = ({ target: { value } }) => {
     if (!value) {
-      const _cuotasInicial = cuotas;
+      const _cuotasFinanciar = cuotas;
       setCuotas([
-        ...calcCuotas(_cuotasInicial, index, pagos[pagosFields.precio]),
+        ...editarCouta(index + 1, 0, saldoFinanciar, _cuotasFinanciar),
       ]);
       return;
     }
     if (periodRegex.test(value)) {
-      const _cuotasInicial = cuotas;
+      const _cuotasFinanciar = cuotas;
       setCuotas([
-        ...calcCuotas(_cuotasInicial, index, pagos[pagosFields.precio], value),
+        ...editarCouta(index + 1, value, saldoFinanciar, _cuotasFinanciar),
       ]);
     }
+    console.log(monto, saldo);
   };
 
   return (
@@ -39,9 +47,9 @@ const CuotaInicial = ({ n, fecha, monto = 0, saldo, tipo, estado, index }) => {
             const _date = new Date(value);
             _date.setDate(_date.getDate() + 1);
             // setDate(format(_date, "yyyy-MM-dd"));
-            const _cuotasInicial = cuotas;
-            _cuotasInicial[index].fecha = _date;
-            setCuotas([..._cuotasInicial]);
+            const _cuotasFinanciar = cuotas;
+            _cuotasFinanciar[index].fecha = _date;
+            setCuotas([..._cuotasFinanciar]);
           }}
           value={format(fecha, "yyyy-MM-dd")}
         />
@@ -59,4 +67,4 @@ const CuotaInicial = ({ n, fecha, monto = 0, saldo, tipo, estado, index }) => {
   );
 };
 
-export default CuotaInicial;
+export default CuotaFinanciar;

@@ -66,7 +66,7 @@ const TableUsuarios = () => {
             minWidth: 100,
             getActions: (params) => [
               <DialogEditUsuarios user={params.row} />,
-              <DialogDeleteUsuarios />,
+              <DialogDeleteUsuarios user={params.row} />,
             ],
           },
         ]}

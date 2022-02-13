@@ -10,6 +10,8 @@ import { useState } from "react";
 import PagosEditDialog from "../PagosEditDialog";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { Button } from "@mui/material";
+import XLSX from "xlsx";
 
 const rows = [
   {
@@ -65,19 +67,51 @@ const PagosTable = () => {
   const handleShowDeleteDialog = (params) => {
     setOpenDeleteDialog(true);
   };
-  const DownloadPdf = () => {
+  const DownloadPdf = (contract) => {
+    console.warn(contract);
     const doc = new jsPDF();
     doc.text("Gestor de pagos", 14, 10);
     doc.autoTable({
-      //columns:field.map(col=>({title:col.headerName,dataKey:col.field})),
-      body: rows.map((row) => Object.values(row)),
+      columns: [
+        { title: "Cliente", dataKey: "cliente" },
+        { title: "Manzana", dataKey: "manzana" },
+        { title: "Lote", dataKey: "lote" },
+        { title: "Moneda", dataKey: "moneda" },
+        { title: "Fecha Inicio", dataKey: "fechaInicio" },
+        { title: "Siguiente Pago", dataKey: "siguientePago" },
+        { title: "Cuotas Vencidas", dataKey: "cuotasVencidas" },
+        { title: "Deuda Pendiente", dataKey: "deudaPendiente" },
+      ],
+      body: rows.filter((row) => row.id === contract.id),
     });
-    doc.save("table.pdf");
+    doc.save("Gestor de pagos.pdf");
   };
-  const DownloadExcel = () => {};
+  const DownloadExcel = (contract) => {
+    const ws = XLSX.utils.json_to_sheet(
+      rows.filter((row) => row.id === contract.id)
+    );
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Gestor de pagos");
+    XLSX.writeFile(wb, "Gestor de pagos.xlsx");
+  };
+
+  const DownloadExcelAll = () => {
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Gestor de pagos");
+    XLSX.writeFile(wb, "Gestor de pagos.xlsx");
+  };
 
   return (
     <div className="Pagos-table">
+      <Button
+        id="exportar"
+        variant="contained"
+        color="success"
+        onClick={() => DownloadExcelAll()}
+      >
+        Exportar a Excel
+      </Button>
       <DataGridPro
         rows={rows}
         columns={[
@@ -144,12 +178,12 @@ const PagosTable = () => {
               <GridActionsCellItem
                 icon={<LibraryBooksIcon />}
                 label="Excel"
-                onClick={() => DownloadExcel()}
+                onClick={() => DownloadExcel(params.row)}
               />,
               <GridActionsCellItem
                 icon={<PictureAsPdfIcon />}
                 label="Pdf"
-                onClick={() => DownloadPdf()}
+                onClick={() => DownloadPdf(params.row)}
               />,
               <PagosEditDialog pago={params.row} />,
               <GridActionsCellItem

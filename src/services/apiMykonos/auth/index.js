@@ -3,11 +3,12 @@ import { post } from "services/apiMykonos/api.service";
 export const signIn = async ({ data }) => {
   try {
     const res = await post({
-      url: "signin",
+      url: "login",
       data,
     });
-    if (!res.success) throw res;
-    return { ...res, data: { ...res.data, token: "fpadoshfe9o" } };
+    console.log(res);
+    if (res.status === "ERROR") throw res;
+    return res;
   } catch (error) {
     throw error;
   }

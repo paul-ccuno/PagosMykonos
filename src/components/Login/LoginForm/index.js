@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import Login, { loginFields } from "models/Login.model";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import AuthContext from "contexts/AuthContext";
 
 const LoginForm = () => {
@@ -25,27 +25,17 @@ const LoginForm = () => {
     try {
       setIsLoading(true);
       console.log(values);
-      signIn(values);
+      await signIn({ data: values });
       navigate("/clientes");
     } catch (error) {
       setIsLoading(false);
+      console.error(error);
     }
   };
-
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
 
   return (
     <form onSubmit={handleSubmit(handleSubmitLoginForm)}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        {/* <TextField
-      variant="outlined"
-      label="xd"
-      type="date"
-      fullWidth
-      InputLabelProps={{ shrink: true }}
-    /> */}
         <TextField
           {...textFieldStyles}
           {...register(loginFields.username)}

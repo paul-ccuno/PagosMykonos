@@ -1,5 +1,7 @@
 import "./styles.css";
 import { Button } from "reactstrap";
+import apiMykonos from "services/apiMykonos";
+import { useEffect } from "react";
 import React, { Fragment, useState } from "react";
 import { useSnackbar } from "contexts/SnackbarContext";
 import { Typography } from "@mui/material";
@@ -8,6 +10,11 @@ function Ajustes() {
   const [datos, setDatos] = useState({
     cambio: "",
   });
+
+  useEffect(() => {
+    const _cambio = apiMykonos.divisas.getDolar();
+    setDatos(_cambio);
+  }, []);
 
   const handleInputChange = (event) => {
     setDatos({

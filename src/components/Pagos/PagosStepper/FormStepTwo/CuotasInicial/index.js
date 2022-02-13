@@ -7,34 +7,52 @@ import {
   TableBody,
   Paper,
 } from "@mui/material";
-import PagosContext from "contexts/PagosContext";
-import CuotasContext, {
-  ListCuotasContext,
-} from "contexts/PagosContext/CuotasContext";
-import { pagosFields } from "models/Pagos.model";
+import { usePagos } from "contexts/PagosContext";
+import CuotasInicialContext, {
+  useCuotasInicial,
+  useListCuotasInicial,
+} from "contexts/PagosContext/CuotasInicialContext";
+import { cuotasFields, pagosFields } from "models/Pagos.model";
 import { useContext, useEffect } from "react";
+import { roundJS } from "utils/cuotas";
+
 import { getDateSameDayNextMonth } from "utils/date";
 import CuotaInicial from "./CuotaInicial";
 
 const CuotasInicial = () => {
-  const { cuotas, setCuotas } = useContext(ListCuotasContext);
-
+  const { cuotas, setCuotas } = useListCuotasInicial();
   const { nCuotas, fechaInicioCuotas, totalMonto, setTotalMonto } =
-    useContext(CuotasContext);
-  const { pagos, setPagos, setIsDisabledNext } = useContext(PagosContext);
+    useCuotasInicial();
+  const {
+    pagos,
+    setPagos,
+    setIsDisabledNext,
+    setSaldoFinanciar,
+    setEndFechaInicial,
+  } = usePagos();
 
   const handleNextStepTwoForm = () => {
     const resStepTwo = {
-      [pagosFields.cantidadCuotasMontoInicial]: nCuotas,
-      [pagosFields.fechaInicioCuotasMontoInicial]: fechaInicioCuotas,
+      [pagosFields.cantidadCuotasInicial]: +nCuotas,
+      [pagosFields.fechaInicioCuotasInicial]: fechaInicioCuotas,
+      [pagosFields.fechaInicial]: fechaInicioCuotas,
       [pagosFields.cuotasInicial]: cuotas,
     };
     setPagos({ ...pagos, ...resStepTwo });
+    // setSaldoFinanciar(cuotas[nCuotas - 1][cuotasFields.saldo]);
+
+    // const currentDate = cuotas[nCuotas - 1][cuotasFields.fecha];
+    // const nextDate = getDateSameDayNextMonth(
+    //   currentDate.getFullYear(),
+    //   currentDate.getMonth(),
+    //   currentDate.getDate(),
+    //   currentDate.getDate()
+    // );
+    // setEndFechaInicial(nextDate);
   };
 
   useEffect(() => {
-    console.log(fechaInicioCuotas);
-    if (nCuotas && fechaInicioCuotas) {
+    if (nCuotas && fechaInicioCuotas && !pagos[pagosFields.cuotasInicial]) {
       const _nCuotasInicial = parseInt(nCuotas);
       const _cuotasInicial = new Array(_nCuotasInicial);
 
@@ -43,9 +61,9 @@ const CuotasInicial = () => {
 
       _cuotasInicial[0] = {};
       _cuotasInicial[0].n = 1;
-      _cuotasInicial[0].fecha = date;
-      _cuotasInicial[0].monto = 0;
-      _cuotasInicial[0].saldo = pagos[pagosFields.precio];
+      _cuotasInicial[0][cuotasFields.fecha] = date;
+      _cuotasInicial[0][cuotasFields.monto] = 0;
+      _cuotasInicial[0][cuotasFields.saldo] = pagos[pagosFields.precio];
 
       for (let i = 1; i < _nCuotasInicial; i++) {
         _cuotasInicial[i] = {};
@@ -62,12 +80,13 @@ const CuotasInicial = () => {
         /* Monto */
 
         _cuotasInicial[i].n = i + 1;
-        _cuotasInicial[i].fecha = date;
-        _cuotasInicial[i].monto = 0;
-        _cuotasInicial[i].saldo = pagos[pagosFields.precio];
+        _cuotasInicial[i][cuotasFields.fecha] = date;
+        _cuotasInicial[i][cuotasFields.monto] = 0;
+        _cuotasInicial[i][cuotasFields.saldo] = pagos[pagosFields.precio];
       }
       setCuotas(_cuotasInicial);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nCuotas, fechaInicioCuotas]);
 
   useEffect(() => {
@@ -77,11 +96,13 @@ const CuotasInicial = () => {
   useEffect(() => {
     if (nCuotas && fechaInicioCuotas && cuotas.length) {
       console.log("pagos", pagos);
+
       handleNextStepTwoForm();
       setIsDisabledNext(false);
       return;
     }
     setIsDisabledNext(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nCuotas, fechaInicioCuotas, cuotas]);
 
   useEffect(() => {
@@ -90,7 +111,8 @@ const CuotasInicial = () => {
     cuotas.forEach(({ monto }) => {
       montoTotal += parseFloat(monto);
     });
-    setTotalMonto(montoTotal);
+    setTotalMonto(roundJS(montoTotal));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cuotas]);
 
   return (
@@ -105,9 +127,11 @@ const CuotasInicial = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {cuotas.map(({ ...props }, i) => (
-            <CuotaInicial key={props.n} {...props} index={i} />
-          ))}
+          {(pagos[pagosFields.cuotasInicial] || cuotas).map(
+            ({ ...props }, i) => (
+              <CuotaInicial key={props.n} {...props} index={i} />
+            )
+          )}
           <TableRow>
             <TableCell colSpan={2} align="right">
               Total

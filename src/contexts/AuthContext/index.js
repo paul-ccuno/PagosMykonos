@@ -1,4 +1,6 @@
+import { usuariosFields } from "models/Usuarios.model";
 import { createContext, useState } from "react";
+import { useCookies } from "react-cookie";
 import apiMykonos from "services/apiMykonos";
 
 const AuthContext = createContext({
@@ -9,26 +11,30 @@ const AuthContext = createContext({
 });
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("pagos_mykonos_user")) || null
-  );
-  const [token, setToken] = useState(
-    localStorage.getItem("pagos_mykonos_token") || null
-  );
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "pagos_mykonos_user",
+    "pagos_mykonos_token",
+  ]);
 
-  const signIn = async ({ user, password }) => {
+  const [user, setUser] = useState(cookies["pagos_mykonos_user"] || null);
+  const [token, setToken] = useState(cookies["pagos_mykonos_token"] || null);
+
+  const signIn = async ({ data }) => {
     try {
-      const data = { user, password };
-      // const res = await apiMykonos.auth.signIn({ data });
-      const res = { data: { user: "Paul", token: "dsadsadas" }, success: true };
-      if (!res.success) {
+      const res = await apiMykonos.auth.signIn({ data });
+      if (res?.status === "Error") {
         console.error("Error", res);
         throw res;
       }
-      localStorage.setItem("pagos_mykonos_user", JSON.stringify(res.data.user));
-      localStorage.setItem("pagos_mykonos_token", res.data.token);
-      setUser(res.data.user);
-      setToken(res.data.token);
+
+      setCookie(
+        "pagos_mykonos_user",
+        `${res[usuariosFields.name]} ${res[usuariosFields.lastName]}`
+      );
+      setCookie("pagos_mykonos_token", res[usuariosFields.dni]);
+
+      setUser(`${res[usuariosFields.name]} ${res[usuariosFields.lastName]}`);
+      setToken(res[usuariosFields.dni]);
     } catch (error) {
       console.log(error);
       throw error;
@@ -36,8 +42,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logOut = () => {
-    localStorage.removeItem("pagos_mykonos_user");
-    localStorage.removeItem("pagos_mykonos_token");
+    removeCookie("pagos_mykonos_user");
+    removeCookie("pagos_mykonos_token");
+
     setUser(null);
     setToken(null);
   };

@@ -10,7 +10,6 @@ import {
 import { useSnackbar } from "contexts/SnackbarContext";
 import { useUsuarios } from "contexts/UsuariosContext";
 import apiMykonos from "services/apiMykonos";
-
 import { Delete } from "@mui/icons-material";
 import { GridActionsCellItem } from "@mui/x-data-grid-pro";
 import { useState } from "react";
@@ -62,8 +61,7 @@ const DialogDeleteUsuarios = ({ user }) => {
         >
           <DialogTitle>Eliminar Usuario</DialogTitle>
           <DialogContent>
-            Está seguro eliminar el usuario:{" "}
-            <b>{user[usuariosFields.nombre]}</b>
+            Está seguro eliminar el usuario: <b>{user[usuariosFields.name]}</b>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog}>Cancelar</Button>

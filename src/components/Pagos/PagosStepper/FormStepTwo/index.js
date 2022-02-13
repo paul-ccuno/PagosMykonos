@@ -1,27 +1,27 @@
 import { textFieldStyles } from "components/General/TextField";
-import { useEffect, useContext } from "react";
+import { useContext, useEffect } from "react";
 import { pagosFields } from "models/Pagos.model";
-import PagosContext from "contexts/PagosContext";
+import { usePagos } from "contexts/PagosContext";
 
 import { TextField } from "@mui/material";
 import { integerRegex } from "utils/regex";
-import CuotasContext, {
-  ListCuotasProvider,
-} from "contexts/PagosContext/CuotasContext";
+import {
+  ListCuotasInicialProvider,
+  useCuotasInicial,
+} from "contexts/PagosContext/CuotasInicialContext";
 import CuotasInicial from "./CuotasInicial";
 import { format } from "date-fns";
 
 const FormStepTwo = () => {
   const { nCuotas, setNCuotas, fechaInicioCuotas, setFechaInicioCuotas } =
-    useContext(CuotasContext);
+    useCuotasInicial();
 
-  const { pagos } = useContext(PagosContext);
+  const { pagos } = usePagos();
 
   useEffect(() => {
-    setNCuotas(pagos[pagosFields.cantidadCuotasMontoInicial] || "");
-    setFechaInicioCuotas(
-      pagos[pagosFields.fechaInicioCuotasMontoInicial] || ""
-    );
+    setNCuotas(pagos[pagosFields.cantidadCuotasInicial] || 0);
+    setFechaInicioCuotas(pagos[pagosFields.fechaInicioCuotasInicial] || "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -36,8 +36,8 @@ const FormStepTwo = () => {
           }
           if (integerRegex.test(value)) setNCuotas(value);
         }}
-        defaultValue={nCuotas}
-        helperText="Debe ingresar un numero menor a 300"
+        value={nCuotas || ""}
+        helperText="Debe ingresar un numero menor a 50"
       />
       <TextField
         {...textFieldStyles}
@@ -50,13 +50,11 @@ const FormStepTwo = () => {
           console.log(value, date);
           setFechaInicioCuotas(date);
         }}
-        defaultValue={
-          fechaInicioCuotas && format(fechaInicioCuotas, "yyyy-MM-dd")
-        }
+        value={fechaInicioCuotas && format(fechaInicioCuotas, "yyyy-MM-dd")}
       />
-      <ListCuotasProvider>
+      <ListCuotasInicialProvider>
         <CuotasInicial />
-      </ListCuotasProvider>
+      </ListCuotasInicialProvider>
     </form>
   );
 };

@@ -12,9 +12,11 @@ import { useContext, useState } from "react";
 import PagosStepper from "../PagosStepper";
 import PagosContext from "contexts/PagosContext";
 import FormStepOne from "../PagosStepper/FormStepOne";
-import { CuotasProvider } from "contexts/PagosContext/CuotasContext";
+import { CuotasInicialProvider } from "contexts/PagosContext/CuotasInicialContext";
 import FormStepTwo from "../PagosStepper/FormStepTwo";
 import apiMykonos from "services/apiMykonos";
+// import FormStepThree from "../PagosStepper/FormStepThree";
+// import { CuotasFinanciarProvider } from "contexts/PagosContext/CuotasFinanciarContext";
 
 const PagosDialog = () => {
   const [open, setOpen] = useState(false);
@@ -52,21 +54,23 @@ const PagosDialog = () => {
         component: (
           <FormStepOne lots={_lots} clients={_clients} dolar={_dolar} />
         ),
-        handleNext: () => {},
       },
       {
         label: "Cuotas iniciales",
         component: (
-          <CuotasProvider>
+          <CuotasInicialProvider>
             <FormStepTwo />
-          </CuotasProvider>
+          </CuotasInicialProvider>
         ),
-        handleNext: () => {},
       },
       {
         label: "Cuotas a financiar",
-        component: <CuotasProvider></CuotasProvider>,
-        handleNext: () => {},
+        component: (
+          <></>
+          // <CuotasFinanciarProvider>
+          //   <FormStepThree />
+          // </CuotasFinanciarProvider>
+        ),
       },
     ];
 
@@ -83,12 +87,10 @@ const PagosDialog = () => {
 
   return (
     <>
-      <Button color="success" variant="contained" onClick={handleOpenDialog}>
+      <Button variant="contained" onClick={handleOpenDialog}>
         Crear
       </Button>
-      <Button variant="contained" onClick={handleOpenDialog}>
-        Exportar
-      </Button>
+
       {open && (
         <Dialog
           className="PagosDialog"
@@ -105,11 +107,11 @@ const PagosDialog = () => {
           <DialogActions>
             <Button onClick={handleCloseDialog}>Cancelar</Button>
             <Button disabled={activeStep === 0} onClick={handleBack}>
-              Back
+              Atras
             </Button>
 
             <Button onClick={handleNext} disabled={isDisabledNext}>
-              {activeStep === steps.length - 1 ? "Finish" : "Next"}
+              {activeStep === steps.length - 1 ? "Enviar" : "Siguiente"}
             </Button>
           </DialogActions>
         </Dialog>

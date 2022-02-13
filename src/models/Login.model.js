@@ -2,8 +2,8 @@ import * as yup from "yup";
 import { EMPTY } from "./errors/es";
 
 export const loginFields = {
-  username: "username",
-  password: "password",
+  username: "email",
+  password: "Password",
 };
 
 const Login = yup.object().shape({

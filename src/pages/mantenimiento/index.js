@@ -128,13 +128,13 @@ function Mantenimiento() {
         Terrenos
       </Typography>
 
-      <Button
+      {/* <Button
         id="insertar"
         color="success"
         onClick={() => abrirModalInsertar()}
       >
         Insertar Nuevo Lote
-      </Button>
+      </Button> */}
 
       <div className="detallesProductos">
         <table>
@@ -163,15 +163,17 @@ function Mantenimiento() {
                     color="primary"
                     onClick={() => seleccionarLote(elemento, "Editar")}
                   >
-                    Editar
+                    Editar Lote
                   </Button>
-                  {"   "}
+                  {/* {"   "}
                   <Button
+                    display="none"
+                    type="hidden"
                     color="danger"
                     onClick={() => seleccionarLote(elemento, "Eliminar")}
-                  >
+                  > 
                     Eliminar
-                  </Button>
+                  </Button>*/}
                 </td>
               </tr>
             ))}

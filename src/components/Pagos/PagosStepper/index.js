@@ -1,5 +1,5 @@
 import "./styles.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 
 import {
   Stepper,

@@ -3,6 +3,10 @@ import { useState, createContext, useContext } from "react";
 const PagosContext = createContext({
   pagos: {},
   setPagos: () => {},
+  saldoFinanciar: 0,
+  setSaldoFinanciar: () => {},
+  endFechaInicial: "",
+  setEndFechaInicial: () => {},
   isCreated: false,
   setIsCreated: () => {},
   activeStep: 0,
@@ -15,8 +19,9 @@ const PagosContext = createContext({
 
 export const PagosProvider = ({ children }) => {
   const [pagos, setPagos] = useState({});
+  const [saldoFinanciar, setSaldoFinanciar] = useState(0);
+  const [endFechaInicial, setEndFechaInicial] = useState("");
   const [isCreated, setIsCreated] = useState(false);
-  const [saldo, setSaldo] = useState(0);
   const [activeStep, setActiveStep] = useState(0);
   const [isDisabledNext, setIsDisabledNext] = useState(true);
   const [steps, setSteps] = useState([]);
@@ -26,8 +31,10 @@ export const PagosProvider = ({ children }) => {
     setPagos,
     isCreated,
     setIsCreated,
-    saldo,
-    setSaldo,
+    saldoFinanciar,
+    setSaldoFinanciar,
+    endFechaInicial,
+    setEndFechaInicial,
     activeStep,
     setActiveStep,
     steps,

@@ -43,7 +43,7 @@ export const createUser = async ({ data }) => {
 export const updateUser = async ({ data }) => {
   try {
     const res = await put({
-      url: "clientes/password",
+      url: "administrador/password",
       data,
     });
     console.log(res);
@@ -57,7 +57,7 @@ export const updateUser = async ({ data }) => {
 export const deleteUser = async ({ dni }) => {
   try {
     const res = await del({
-      url: `clientes/eliminar?DNI=${dni}`,
+      url: `administrador/eliminar?DNI=${dni}`,
     });
     console.log(res);
     if (res?.status === "ERROR") throw res;

@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { textFieldStyles } from "components/General/TextField";
 import { useSnackbar } from "contexts/SnackbarContext";
+import { useUsuarios } from "contexts/UsuariosContext";
 import Usuario, { usuariosFields } from "models/Usuarios.model";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -19,6 +20,7 @@ const {
 
 const DialogCreateUsuarios = () => {
   const [open, setOpen] = useState(false);
+  const { setIsCreated } = useUsuarios();
   const { openSnackbar } = useSnackbar();
 
   const theme = useTheme();
@@ -46,6 +48,7 @@ const DialogCreateUsuarios = () => {
     try {
       const res = await apiMykonos.users.createUser({ data: values });
       console.log(res);
+      setIsCreated(true);
       openSnackbar({ text: "Usuario creado correctamente" });
       setOpen(false);
     } catch (error) {
