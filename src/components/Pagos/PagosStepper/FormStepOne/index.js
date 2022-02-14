@@ -1,19 +1,12 @@
 import { TextField, Autocomplete } from "@mui/material";
 import { textFieldStyles } from "components/General/TextField";
 import { pagosFields } from "models/Pagos.model";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { periodRegex } from "utils/regex";
-import PagosContext from "contexts/PagosContext";
-
-const proyectos = [{ id: 1, label: "Mykonos" }];
-
-const divisas = [
-  { id: 1, label: "Dolar" },
-  { id: 2, label: "Sol" },
-];
+import { usePagos } from "contexts/PagosContext";
 
 const FormStepOne = ({ clients, lots, dolar }) => {
-  const { pagos, setPagos, setIsDisabledNext } = useContext(PagosContext);
+  const { pagos, setPagos, setIsDisabledNext, projects, divisas } = usePagos();
 
   const [cliente, setCliente] = useState(pagos[pagosFields.cliente] || "");
   const [proyecto, setProyecto] = useState(pagos[pagosFields.proyecto] || 1);
@@ -29,7 +22,7 @@ const FormStepOne = ({ clients, lots, dolar }) => {
     clients.find(({ id }) => cliente === id) || null
   );
   const [defaultProyecto] = useState(
-    proyectos.find(({ id }) => proyecto === id) || 1
+    projects.find(({ id }) => proyecto === id) || 1
   );
   const [defaultLote] = useState(
     lots.find(({ id }) => lote === id) || undefined
@@ -79,7 +72,7 @@ const FormStepOne = ({ clients, lots, dolar }) => {
         )}
       />
       <Autocomplete
-        options={proyectos}
+        options={projects}
         onChange={(_, data) => {
           setProyecto(data?.id);
         }}
@@ -113,6 +106,7 @@ const FormStepOne = ({ clients, lots, dolar }) => {
         {...textFieldStyles}
         label="Precio"
         onChange={({ target: { value } }) => {
+          // eslint-disable-next-line eqeqeq
           if (value == 0) setPrecio(value);
           if (periodRegex.test(value)) setPrecio(value);
         }}

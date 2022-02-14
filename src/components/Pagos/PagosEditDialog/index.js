@@ -11,11 +11,14 @@ import TablePagosEdit from "./TablePagosEdit";
 import { useEffect, useState } from "react";
 import { GridActionsCellItem } from "@mui/x-data-grid-pro";
 import { Edit } from "@mui/icons-material";
+import apiMykonos from "services/apiMykonos";
 
 const PagosEditDialog = ({ pago, cuotas, setCuotas }) => {
   const [open, setOpen] = useState(false);
 
-  const handleOpenDialog = () => {
+  const handleOpenDialog = async () => {
+    const _cuotas = await apiMykonos.contracts.getCuotas({ id: pago.id });
+    console.log(_cuotas);
     setOpen(true);
   };
 

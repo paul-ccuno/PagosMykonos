@@ -1,10 +1,9 @@
-import { DataGridPro } from "@mui/x-data-grid-pro";
-// import { DataGrid } from "@mui/x-data-grid";
 import { useEffect } from "react";
 import apiMykonos from "services/apiMykonos";
 import ClientesDialogEdit from "../ClientesDialogEdit";
 import { useClientes } from "contexts/ClientesContext";
 import ClientesDialogDelete from "../ClientesDialogDelete";
+import { DataGridPro } from "@mui/x-data-grid-pro";
 
 const styles = {
   height: "100%",

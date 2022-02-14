@@ -2,8 +2,9 @@ import "./styles.css";
 import PagosTable from "components/Pagos/PagosTable";
 import PagosDialog from "components/Pagos/PagosDialog";
 
-import { Container, Typography, Box, Button } from "@mui/material";
+import { Container, Typography, Box } from "@mui/material";
 import { PagosProvider } from "contexts/PagosContext";
+import { ContratosProvider } from "contexts/ContratosContext";
 
 const pageStyles = {
   paddingTop: "1em",
@@ -13,17 +14,19 @@ const pageStyles = {
 
 const Pagos = () => {
   return (
-    <Container className="Pagos" maxWidth="xl" style={pageStyles}>
-      <Typography variant="h4" align="center">
-        Pagos
-      </Typography>
-      <Box sx={{ display: "flex", gap: "10px" }}>
-        <PagosProvider>
-          <PagosDialog />
-        </PagosProvider>
-      </Box>
-      <PagosTable />
-    </Container>
+    <ContratosProvider>
+      <Container className="Pagos" maxWidth="xl" style={pageStyles}>
+        <Typography variant="h4" align="center">
+          Pagos
+        </Typography>
+        <Box sx={{ display: "flex", gap: "10px" }}>
+          <PagosProvider>
+            <PagosDialog />
+          </PagosProvider>
+        </Box>
+        <PagosTable />
+      </Container>
+    </ContratosProvider>
   );
 };
 

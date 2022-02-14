@@ -7,6 +7,7 @@ export const getContracts = async () => {
     });
     if (res?.status === "ERROR") throw res;
     res.forEach((contract) => (contract.id = contract.idContrato));
+    console.log("retornando", res);
     return res;
   } catch (error) {
     throw error;
@@ -16,7 +17,7 @@ export const getContracts = async () => {
 export const getContract = async ({ id }) => {
   try {
     const res = await get({
-      url: `contratos/espercifico`,
+      url: `contratos/especifico`,
       data: {
         idContrato: id,
       },
@@ -44,11 +45,11 @@ export const createContract = async ({ data }) => {
   }
 };
 
-export const updateCuota = async ({ data }) => {
+export const deleteContract = async ({ id }) => {
   try {
-    const res = await patch({
-      url: "pagos/update",
-      data,
+    const res = await del({
+      url: `contratos/delete`,
+      data: { idContrato: id },
     });
     console.log(res);
     if (res?.status === "ERROR") throw res;
@@ -58,11 +59,26 @@ export const updateCuota = async ({ data }) => {
   }
 };
 
-export const deleteContract = async ({ id }) => {
+export const getCuotas = async ({ id }) => {
   try {
-    const res = await del({
-      url: `contratos/delete`,
+    const res = await get({
+      url: "pagos/cliente",
       data: { idContrato: id },
+      body: true,
+    });
+    console.log(res);
+    if (res?.status === "ERROR") throw res;
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateCuota = async ({ data }) => {
+  try {
+    const res = await patch({
+      url: "pagos/update",
+      data,
     });
     console.log(res);
     if (res?.status === "ERROR") throw res;

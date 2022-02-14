@@ -2,10 +2,11 @@ import "./styles.css";
 
 import { Stepper, Step, StepLabel, Typography, Box } from "@mui/material";
 import { usePagos } from "contexts/PagosContext";
-import { pagosFields } from "models/Pagos.model";
+import Resume from "./Resume";
 
 export const PagosStepper = () => {
-  const { activeStep, steps, pagos } = usePagos();
+  const { activeStep, steps, pagos, clients, lots, projects, divisas } =
+    usePagos();
 
   return (
     <Box className="PagosStepper" sx={{ width: "100%" }}>
@@ -22,13 +23,13 @@ export const PagosStepper = () => {
       </Stepper>
       {activeStep === steps.length ? (
         <>
-          <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
-            Resumen
-          </Typography>
-          <Typography variant="body1" sx={{ mt: 2, mb: 1 }}>
-            <b>Cliente: </b>
-            {pagos[pagosFields.cliente]}
-          </Typography>
+          <Resume
+            pagos={pagos}
+            clients={clients}
+            lots={lots}
+            projects={projects}
+            divisas={divisas}
+          />
         </>
       ) : (
         <>

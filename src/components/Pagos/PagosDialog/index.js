@@ -9,9 +9,9 @@ import {
   Box,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import PagosStepper from "../PagosStepper";
-import PagosContext from "contexts/PagosContext";
+import { usePagos } from "contexts/PagosContext";
 import FormStepOne from "../PagosStepper/FormStepOne";
 import { CuotasInicialProvider } from "contexts/PagosContext/CuotasInicialContext";
 import FormStepTwo from "../PagosStepper/FormStepTwo";
@@ -20,6 +20,7 @@ import FormStepThree from "../PagosStepper/FormStepThree";
 import { CuotasFinanciarProvider } from "contexts/PagosContext/CuotasFinanciarContext";
 import { cuotasFields, pagosFields } from "models/Pagos.model";
 import { format } from "date-fns";
+import { useSnackbar } from "contexts/SnackbarContext";
 
 const PagosDialog = () => {
   const [open, setOpen] = useState(false);
@@ -34,7 +35,12 @@ const PagosDialog = () => {
     setActiveStep,
     isDisabledNext,
     setIsDisabledNext,
-  } = useContext(PagosContext);
+    setClients,
+    setLots,
+    setDolar,
+  } = usePagos();
+
+  const { openSnackbar } = useSnackbar();
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -51,6 +57,10 @@ const PagosDialog = () => {
     const _clients = await apiMykonos.clients.getClients(true);
     const _lots = await apiMykonos.lots.getLotsLN();
     const _dolar = await apiMykonos.divisas.getDolar();
+
+    setClients(_clients);
+    setLots(_lots);
+    setDolar(_dolar);
 
     const STEPS = [
       {
@@ -78,7 +88,6 @@ const PagosDialog = () => {
     ];
 
     setSteps(STEPS);
-
     setOpen(true);
   };
 
@@ -88,26 +97,32 @@ const PagosDialog = () => {
     setActiveStep(0);
   };
 
-  const handleSubmit = () => {
-    const _pagos = JSON.parse(JSON.stringify(pagos));
-    console.log(_pagos);
-    _pagos[pagosFields.fechaInicial] = format(
-      _pagos[pagosFields.fechaInicial],
-      "yyyy-MM-dd"
-    );
-    for (let i = 0; i < _pagos[pagosFields.cuotasInicial].length; i++) {
-      _pagos[pagosFields.cuotasInicial][i][cuotasFields.fecha] = format(
-        _pagos[pagosFields.cuotasInicial][i][cuotasFields.fecha],
+  const handleSubmit = async () => {
+    try {
+      const _pagos = JSON.parse(JSON.stringify(pagos));
+      _pagos[pagosFields.fechaInicial] = format(
+        new Date(_pagos[pagosFields.fechaInicial]),
         "yyyy-MM-dd"
       );
+      for (let i = 0; i < _pagos[pagosFields.cuotasInicial].length; i++) {
+        _pagos[pagosFields.cuotasInicial][i][cuotasFields.fecha] = format(
+          new Date(_pagos[pagosFields.cuotasInicial][i][cuotasFields.fecha]),
+          "yyyy-MM-dd"
+        );
+      }
+      for (let i = 0; i < _pagos[pagosFields.cuotasFinanciar].length; i++) {
+        _pagos[pagosFields.cuotasFinanciar][i][cuotasFields.fecha] = format(
+          new Date(_pagos[pagosFields.cuotasFinanciar][i][cuotasFields.fecha]),
+          "yyyy-MM-dd"
+        );
+      }
+
+      const res = await apiMykonos.contracts.createContract({ data: _pagos });
+      openSnackbar({ text: "Contrato creado correctamente" });
+      console.log(res);
+    } catch (error) {
+      openSnackbar({ text: "Error al crear contrato" });
     }
-    for (let i = 0; i < _pagos[pagosFields.cuotasFinanciar].length; i++) {
-      _pagos[pagosFields.cuotasFinanciar][i][cuotasFields.fecha] = format(
-        _pagos[pagosFields.cuotasFinanciar][i][cuotasFields.fecha],
-        "yyyy-MM-dd"
-      );
-    }
-    // console.log(_pagos);
   };
 
   return (

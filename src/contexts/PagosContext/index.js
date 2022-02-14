@@ -15,6 +15,15 @@ const PagosContext = createContext({
   setSteps: () => {},
   isDisabledNext: true,
   setIsDisabledNext: () => {},
+
+  clients: [],
+  setClients: () => {},
+  lots: [],
+  setLots: () => {},
+  dolar: 0,
+  setDolar: () => {},
+  projects: [],
+  divisas: [],
 });
 
 export const PagosProvider = ({ children }) => {
@@ -25,6 +34,16 @@ export const PagosProvider = ({ children }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [isDisabledNext, setIsDisabledNext] = useState(true);
   const [steps, setSteps] = useState([]);
+
+  const [clients, setClients] = useState([]);
+  const [lots, setLots] = useState([]);
+  const [dolar, setDolar] = useState(0);
+
+  const [projects] = useState([{ id: 1, label: "Mykonos" }]);
+  const [divisas] = useState([
+    { id: 1, label: "Dolar" },
+    { id: 2, label: "Sol" },
+  ]);
 
   const value = {
     pagos,
@@ -41,6 +60,15 @@ export const PagosProvider = ({ children }) => {
     setSteps,
     isDisabledNext,
     setIsDisabledNext,
+
+    clients,
+    setClients,
+    lots,
+    setLots,
+    dolar,
+    setDolar,
+    projects,
+    divisas,
   };
   return (
     <PagosContext.Provider value={value}>{children}</PagosContext.Provider>

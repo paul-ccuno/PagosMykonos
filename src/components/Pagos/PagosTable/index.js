@@ -6,17 +6,22 @@ import {
   LibraryBooks as LibraryBooksIcon,
   PictureAsPdf as PictureAsPdfIcon,
 } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PagosEditDialog from "../PagosEditDialog";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { Button } from "@mui/material";
 import XLSX from "xlsx";
+import apiMykonos from "services/apiMykonos";
+import { useContratos } from "contexts/ContratosContext";
+import { contratosFields } from "models/Pagos.model";
+import { DataGrid } from "@mui/x-data-grid";
+import { format } from "date-fns";
 
 const rows = [
   {
     id: 1,
-    cliente: "Damien",
+    Nombres: "Damien",
     manzana: "B",
     lote: 2,
     moneda: "Dolar",
@@ -27,7 +32,7 @@ const rows = [
   },
   {
     id: 2,
-    cliente: "Jorge",
+    Nombres: "Jorge",
     manzana: "A",
     lote: 3,
     moneda: "Dolar",
@@ -38,7 +43,7 @@ const rows = [
   },
   {
     id: 3,
-    cliente: "Manrique",
+    Nombres: "Manrique",
     manzana: "C",
     lote: 2,
     moneda: "Sol",
@@ -49,7 +54,7 @@ const rows = [
   },
   {
     id: 4,
-    cliente: "Eduardo",
+    Nombres: "Eduardo",
     manzana: "B",
     lote: 2,
     moneda: "Sol",
@@ -61,12 +66,38 @@ const rows = [
 ];
 
 const PagosTable = () => {
-  const [cuotasEdit, setCuotasEdit] = useState({});
+  const { contracts, setContracts, isCreated, setIsCreated } = useContratos();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const handleShowDeleteDialog = (params) => {
     setOpenDeleteDialog(true);
   };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(async () => {
+    const _contracts = await apiMykonos.contracts.getContracts();
+    setContracts(_contracts);
+    console.log(contracts);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(async () => {
+    if (isCreated) {
+      const _contracts = await apiMykonos.contracts.getContracts();
+      for (let i = 0; i < _contracts.length; i++) {
+        _contracts[i][contratosFields.fechaInicio] = format(
+          new Date(_contracts[i][contratosFields.fechaInicio]),
+          "yyyy-MM-dd"
+        );
+      }
+      console.log(_contracts);
+      setContracts(_contracts);
+      setIsCreated(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCreated]);
+
   const DownloadPdf = (contract) => {
     console.warn(contract);
     const doc = new jsPDF();
@@ -113,61 +144,61 @@ const PagosTable = () => {
         Exportar a Excel
       </Button>
       <DataGridPro
-        rows={rows}
+        rows={contracts}
         columns={[
           { field: "id", headerName: "Código", width: 70 },
           {
-            field: "cliente",
+            field: contratosFields.cliente,
             headerName: "Cliente",
             type: "string",
             minWidth: 150,
           },
           {
-            field: "manzana",
+            field: contratosFields.mz,
             headerName: "Manzana",
             type: "string",
             minWidth: 100,
           },
           {
-            field: "lote",
+            field: contratosFields.lote,
             headerName: "Número terreno",
-            type: "string",
+            type: "number",
             minWidth: 150,
           },
           {
-            field: "moneda",
+            field: contratosFields.moneda,
             headerName: "Moneda",
             type: "string",
             minWidth: 100,
           },
           {
-            field: "fechaInicio",
+            field: contratosFields.fechaInicio,
             headerName: "Fecha inicio",
-            type: "date",
+            type: "string",
             minWidth: 120,
           },
           {
-            field: "siguientePago",
+            field: contratosFields.fechaPago,
             headerName: "Siguiente pago",
-            type: "date",
+            type: "string",
             minWidth: 130,
           },
           {
-            field: "estadoPago",
+            field: contratosFields.estadoPago,
             headerName: "Estado pago",
-            type: "date",
+            type: "string",
             minWidth: 130,
           },
           {
-            field: "cuotasVencidas",
+            field: contratosFields.cuotasVencidas,
             headerName: "Cuotas vencidas",
-            type: "number",
+            type: "string",
             minWidth: 140,
           },
           {
-            field: "deudaPendiente",
+            field: contratosFields.deudaPendiente,
             headerName: "Deuda pendiente",
-            type: "number",
+            type: "string",
             minWidth: 140,
           },
           {
