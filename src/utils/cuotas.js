@@ -123,7 +123,7 @@ export function editarCouta(
   if (numeroCouta < ArrayCoutas.length) {
     console.log("SEGUNDA CONDICIOóN");
     let ArrayCoutas2 = ArrayCoutas;
-    ArrayCoutas2[numeroCouta - 1].monto = Number(MontoAModificar);
+    ArrayCoutas2[numeroCouta - 1].monto = +MontoAModificar;
 
     let CantidadPagada = 0;
     for (let i = 0; i < numeroCouta; i++) {
@@ -148,7 +148,7 @@ export function editarCouta(
     //console.log(CantidadPendiente,"Cuanto es la Couta ", coutaNueva, "Cantidad de Coutas",coutasPendientes);
     //console.log('Cambio de Couta: ',coutaNueva, " Monto: ",CantidadPendiente);
     for (let i = numeroCouta - 1; i < ArrayCoutas2.length - 1; i++) {
-      if (i === 0 && i < 0) {
+      if (i === 0 || i < 0) {
         ArrayCoutas2[i].saldo = roundJS(MontoActual - ArrayCoutas2[i].monto);
       } else {
         ArrayCoutas2[i].saldo = roundJS(

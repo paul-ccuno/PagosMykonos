@@ -6,6 +6,7 @@ import {
   DialogContent,
   useMediaQuery,
   DialogActions,
+  Box,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useContext, useState } from "react";
@@ -17,12 +18,15 @@ import FormStepTwo from "../PagosStepper/FormStepTwo";
 import apiMykonos from "services/apiMykonos";
 import FormStepThree from "../PagosStepper/FormStepThree";
 import { CuotasFinanciarProvider } from "contexts/PagosContext/CuotasFinanciarContext";
+import { cuotasFields, pagosFields } from "models/Pagos.model";
+import { format } from "date-fns";
 
 const PagosDialog = () => {
   const [open, setOpen] = useState(false);
 
   const theme = useTheme();
   const {
+    pagos,
     setPagos,
     steps,
     setSteps,
@@ -84,6 +88,28 @@ const PagosDialog = () => {
     setActiveStep(0);
   };
 
+  const handleSubmit = () => {
+    const _pagos = JSON.parse(JSON.stringify(pagos));
+    console.log(_pagos);
+    _pagos[pagosFields.fechaInicial] = format(
+      _pagos[pagosFields.fechaInicial],
+      "yyyy-MM-dd"
+    );
+    for (let i = 0; i < _pagos[pagosFields.cuotasInicial].length; i++) {
+      _pagos[pagosFields.cuotasInicial][i][cuotasFields.fecha] = format(
+        _pagos[pagosFields.cuotasInicial][i][cuotasFields.fecha],
+        "yyyy-MM-dd"
+      );
+    }
+    for (let i = 0; i < _pagos[pagosFields.cuotasFinanciar].length; i++) {
+      _pagos[pagosFields.cuotasFinanciar][i][cuotasFields.fecha] = format(
+        _pagos[pagosFields.cuotasFinanciar][i][cuotasFields.fecha],
+        "yyyy-MM-dd"
+      );
+    }
+    // console.log(_pagos);
+  };
+
   return (
     <>
       <Button variant="contained" onClick={handleOpenDialog}>
@@ -94,7 +120,6 @@ const PagosDialog = () => {
         <Dialog
           className="PagosDialog"
           open={open}
-          onClose={handleCloseDialog}
           maxWidth="sm"
           fullWidth={true}
           fullScreen={fullScreen}
@@ -104,21 +129,35 @@ const PagosDialog = () => {
             <PagosStepper />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseDialog}>Cancelar</Button>
-            <Button disabled={activeStep === 0} onClick={handleBack}>
-              Atras
-            </Button>
-            {activeStep === steps.length ? (
-              <Button variant="contained">Enviar</Button>
-            ) : (
-              <Button
-                onClick={handleNext}
-                disabled={isDisabledNext}
-                variant="contained"
-              >
-                {activeStep === steps.length - 1 ? "Finalizar" : "Siguiente"}
-              </Button>
-            )}
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <Button onClick={handleCloseDialog}>Cancelar</Button>
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <Button disabled={activeStep === 0} onClick={handleBack}>
+                  Atras
+                </Button>
+                {activeStep === steps.length ? (
+                  <Button variant="contained" onClick={handleSubmit}>
+                    Enviar
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleNext}
+                    disabled={isDisabledNext}
+                    variant="contained"
+                  >
+                    {activeStep === steps.length - 1
+                      ? "Finalizar"
+                      : "Siguiente"}
+                  </Button>
+                )}
+              </Box>
+            </Box>
           </DialogActions>
         </Dialog>
       )}

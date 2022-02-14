@@ -1,14 +1,6 @@
 import "./styles.css";
-import { useContext } from "react";
 
-import {
-  Stepper,
-  Step,
-  StepLabel,
-  Typography,
-  Box,
-  Button,
-} from "@mui/material";
+import { Stepper, Step, StepLabel, Typography, Box } from "@mui/material";
 import { usePagos } from "contexts/PagosContext";
 import { pagosFields } from "models/Pagos.model";
 
