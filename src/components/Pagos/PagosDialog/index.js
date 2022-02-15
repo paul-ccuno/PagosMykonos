@@ -21,9 +21,13 @@ import { CuotasFinanciarProvider } from "contexts/PagosContext/CuotasFinanciarCo
 import { cuotasFields, pagosFields } from "models/Pagos.model";
 import { format } from "date-fns";
 import { useSnackbar } from "contexts/SnackbarContext";
+import { useCookies } from "react-cookie";
+import { useContratos } from "contexts/ContratosContext";
 
 const PagosDialog = () => {
   const [open, setOpen] = useState(false);
+
+  const { setIsCreated } = useContratos();
 
   const theme = useTheme();
   const {
@@ -40,6 +44,8 @@ const PagosDialog = () => {
     setDolar,
   } = usePagos();
 
+  const [cookies] = useCookies(["pagos_mykonos_token"]);
+
   const { openSnackbar } = useSnackbar();
 
   const handleNext = () => {
@@ -55,7 +61,7 @@ const PagosDialog = () => {
 
   const handleOpenDialog = async () => {
     const _clients = await apiMykonos.clients.getClients(true);
-    const _lots = await apiMykonos.lots.getLotsLN();
+    const _lots = await apiMykonos.lots.getLotsLN(true);
     const _dolar = await apiMykonos.divisas.getDolar();
 
     setClients(_clients);
@@ -99,7 +105,12 @@ const PagosDialog = () => {
 
   const handleSubmit = async () => {
     try {
+      const user = await apiMykonos.users.getUser({
+        dni: cookies["pagos_mykonos_token"],
+      });
+
       const _pagos = JSON.parse(JSON.stringify(pagos));
+
       _pagos[pagosFields.fechaInicial] = format(
         new Date(_pagos[pagosFields.fechaInicial]),
         "yyyy-MM-dd"
@@ -117,11 +128,14 @@ const PagosDialog = () => {
         );
       }
 
-      const res = await apiMykonos.contracts.createContract({ data: _pagos });
+      _pagos[pagosFields.usuario] = user.id;
+
+      await apiMykonos.contracts.createContract({ data: _pagos });
       openSnackbar({ text: "Contrato creado correctamente" });
-      console.log(res);
+      setIsCreated(true);
+      setOpen(false);
     } catch (error) {
-      openSnackbar({ text: "Error al crear contrato" });
+      openSnackbar({ severity: "error", text: "Error al crear contrato" });
     }
   };
 

@@ -24,3 +24,29 @@ export const getDateSameDayNextMonth = (
 
   return new Date(currentYear, currentMonth + 1, day);
 };
+
+export const months = [
+  "Enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre",
+];
+
+export const years = () => {
+  let initialYear = new Date().getFullYear() - 5;
+  const years = new Array(10);
+
+  for (let i = 0; i < years.length; i++) {
+    years[i] = initialYear;
+    initialYear += 1;
+  }
+  return years;
+};

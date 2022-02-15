@@ -35,7 +35,7 @@ const CuotaInicial = ({ n, fecha, monto = 0, saldo, tipo, estado, index }) => {
           {...textFieldStyles}
           inputProps={{ style: { height: "1em" } }}
           type="date"
-          onChange={({ target: { value } }) => {
+          onBlur={({ target: { value } }) => {
             const _date = new Date(value);
             _date.setDate(_date.getDate() + 1);
             // setDate(format(_date, "yyyy-MM-dd"));
@@ -43,7 +43,7 @@ const CuotaInicial = ({ n, fecha, monto = 0, saldo, tipo, estado, index }) => {
             _cuotasInicial[index].fecha = _date;
             setCuotas([..._cuotasInicial]);
           }}
-          value={format(fecha, "yyyy-MM-dd")}
+          defaultValue={format(fecha, "yyyy-MM-dd")}
         />
       </TableCell>
       <TableCell>

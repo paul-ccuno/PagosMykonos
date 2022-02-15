@@ -83,7 +83,6 @@ const Resume = ({ pagos, clients, lots, projects, divisas }) => {
                       pagos[pagosFields.cuotasInicial].forEach(({ monto }) => {
                         montoTotal += parseFloat(monto);
                       });
-                      console.log(montoTotal);
                       return <>{roundJS(montoTotal)}</>;
                     })()}
                 </TableCell>

@@ -24,7 +24,6 @@ const LoginForm = () => {
   const handleSubmitLoginForm = async (values) => {
     try {
       setIsLoading(true);
-      console.log(values);
       await signIn({ data: values });
       navigate("/clientes");
     } catch (error) {

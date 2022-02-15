@@ -47,7 +47,7 @@ const DialogCreateUsuarios = () => {
   const handleSubmitCreate = async (values) => {
     try {
       const res = await apiMykonos.users.createUser({ data: values });
-      console.log(res);
+
       setIsCreated(true);
       openSnackbar({ text: "Usuario creado correctamente" });
       setOpen(false);

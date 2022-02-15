@@ -11,6 +11,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { textFieldStyles } from "components/General/TextField";
+import { useClientes } from "contexts/ClientesContext";
 import { useSnackbar } from "contexts/SnackbarContext";
 import Cliente, { clientesFields } from "models/Clientes.model";
 import { useState } from "react";
@@ -20,6 +21,7 @@ import apiMykonos from "services/apiMykonos";
 const ClientesDialogCreate = () => {
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
+  const { setIsCreated } = useClientes();
   const { openSnackbar } = useSnackbar();
 
   const theme = useTheme();
@@ -49,8 +51,8 @@ const ClientesDialogCreate = () => {
   const handleSubmitCreate = async (values) => {
     try {
       const res = await apiMykonos.clients.createClient({ data: values });
-      console.log(res);
       openSnackbar({ text: "Cliente creado correctamente" });
+      setIsCreated(true);
       setOpen(false);
     } catch (error) {
       console.error(error);

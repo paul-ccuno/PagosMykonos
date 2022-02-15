@@ -7,7 +7,7 @@ export const pagosFields = {
   precio: "MontoFinal",
   fechaInicial: "FechaInicial",
   cuotasInicial: "cuotasInicial",
-  cuotasFinanciar: "cuotasFinanciadas",
+  cuotasFinanciar: "cuotasFinanciar",
 
   cantidadCuotasInicial: "cantidadCuotasMontoInicial",
   fechaInicioCuotasInicial: "fechaInicioCuotasMontoInicial",
@@ -30,8 +30,10 @@ export const contratosFields = {
   lote: "Numero",
   moneda: "NombreMoneda",
   fechaInicio: "FechaInicio",
-  fechaPago: "FechaDePago",
-  estadoPago: "Estado de Pago",
+  fechaPago: "SiguientePago",
+  estadoPago: "Estado",
   cuotasVencidas: "CuotasVencidas",
-  deudaPendiente: "DeudaPendiente",
+  deudaPendiente: "Deuda",
+  precio: "MontoFinal",
+  tipoCambio: "TipoDeCambio",
 };

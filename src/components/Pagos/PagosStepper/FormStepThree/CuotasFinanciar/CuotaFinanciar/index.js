@@ -33,7 +33,6 @@ const CuotaFinanciar = ({
         ...editarCouta(index + 1, value, saldoFinanciar, _cuotasFinanciar),
       ]);
     }
-    console.log(monto, saldo);
   };
 
   return (

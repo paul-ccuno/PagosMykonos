@@ -6,7 +6,7 @@ export const signIn = async ({ data }) => {
       url: "login",
       data,
     });
-    console.log(res);
+
     if (res.status === "ERROR") throw res;
     return res;
   } catch (error) {

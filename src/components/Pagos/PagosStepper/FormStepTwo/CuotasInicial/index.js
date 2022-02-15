@@ -107,7 +107,6 @@ const CuotasInicial = () => {
           return;
         }
       }
-      console.log("pagos", pagos);
 
       handleNextStepTwoForm();
       setIsDisabledNext(false);

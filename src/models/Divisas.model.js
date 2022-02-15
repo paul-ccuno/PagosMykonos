@@ -2,7 +2,7 @@ import * as yup from "yup";
 import { EMPTY } from "./errors/es";
 
 export const divisasFields = {
-  tipoCambio: "tipoCambio",
+  tipoCambio: "TipoDeCambio",
 };
 
 const Divisa = yup.object().shape({

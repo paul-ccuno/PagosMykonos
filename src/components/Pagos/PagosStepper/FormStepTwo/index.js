@@ -47,7 +47,7 @@ const FormStepTwo = () => {
         onChange={({ target: { value } }) => {
           const date = new Date(value);
           date.setDate(date.getDate() + 1);
-          console.log(value, date);
+
           setFechaInicioCuotas(date);
         }}
         value={fechaInicioCuotas && format(fechaInicioCuotas, "yyyy-MM-dd")}

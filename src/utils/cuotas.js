@@ -50,16 +50,13 @@ export const calcCuotasFinanciar = (cuotas) => {
 
 export function generarArrayCuotas(CantidadCoutas, Monto) {
   let couta = parseFloat(Math.round((Monto / CantidadCoutas) * 100) / 100);
-  console.log(couta);
   let ArrayCoutas = [];
   for (let i = 0; i < CantidadCoutas; i++) {
     ArrayCoutas.unshift(couta);
   }
   let acumulador;
   acumulador = couta * (CantidadCoutas - 1);
-  console.log(acumulador);
   Monto = Monto - acumulador;
-  console.log(Monto);
   ArrayCoutas[ArrayCoutas.length - 1] = parseFloat(
     Math.round(Monto * 100) / 100
   );
@@ -74,12 +71,11 @@ export function editarCouta(
   ArrayCoutas
 ) {
   if (numeroCouta === ArrayCoutas.length) {
-    console.log("Primera CONDICIOóN");
     let ArrayCoutas2 = ArrayCoutas;
     ArrayCoutas2[numeroCouta - 1].monto = MontoAModificar;
     let CantidadPagada = MontoActual - MontoAModificar;
     let CantidadAPagar = Math.round(CantidadPagada * 100) / 100;
-    console.log("Cantidad a Cambiar ", CantidadAPagar);
+
     let coutasPendientes = ArrayCoutas2.length - 1;
     let coutaNueva =
       Math.round((CantidadAPagar / coutasPendientes) * 100) / 100;
@@ -121,7 +117,7 @@ export function editarCouta(
   }
 
   if (numeroCouta < ArrayCoutas.length) {
-    console.log("SEGUNDA CONDICIOóN");
+    // console.log("SEGUNDA CONDICIOóN");
     let ArrayCoutas2 = ArrayCoutas;
     ArrayCoutas2[numeroCouta - 1].monto = +MontoAModificar;
 

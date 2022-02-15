@@ -6,16 +6,12 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEditCuotas } from "contexts/EditCuotasContext";
+
 import CuotaEdit from "./CuotaEdit";
 
 const TablePagosEdit = ({ id }) => {
-  const [cuotas, setCuotas] = useState([]);
-
-  useEffect(() => {
-    setCuotas([]);
-    console.log(cuotas);
-  }, []);
+  const { cuotas } = useEditCuotas();
 
   return (
     <TableContainer>

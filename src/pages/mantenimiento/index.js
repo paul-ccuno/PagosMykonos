@@ -1,6 +1,6 @@
 import "./styles.css";
-import { useState } from "react";
-import { Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Container, Typography } from "@mui/material";
 import {
   FormGroup,
   ModalFooter,
@@ -11,48 +11,24 @@ import {
 } from "reactstrap";
 
 import { useSnackbar } from "contexts/SnackbarContext";
+import apiMykonos from "services/apiMykonos";
+
+const pageStyles = {
+  paddingTop: "1em",
+  display: "flex",
+  flexDirection: "column",
+};
+
+const estadoLote = [
+  { id: 1, label: "Disponible" },
+  { id: 2, label: "Separado" },
+  { id: 3, label: "Vendido" },
+  { id: 4, label: "Bloqueado" },
+];
 
 function Mantenimiento() {
-  const dataLote = [
-    {
-      id: 1,
-      Lote: "A-1",
-      Manzana: "A",
-      Numero: 1,
-      Area: 118.09,
-      Precio: 1476.25,
-      Estado: "Disponible",
-    },
-    {
-      id: 2,
-      Lote: "A-2",
-      Manzana: "A",
-      Numero: 2,
-      Area: 118.09,
-      Precio: 1476.25,
-      Estado: "Disponible",
-    },
-    {
-      id: 3,
-      Lote: "A-3",
-      Manzana: "A",
-      Numero: 3,
-      Area: 118.09,
-      Precio: 1476.25,
-      Estado: "Disponible",
-    },
-    {
-      id: 4,
-      Lote: "A-4",
-      Manzana: "A",
-      Numero: 4,
-      Area: 118.09,
-      Precio: 1476.25,
-      Estado: "Disponible",
-    },
-  ];
-
-  const [data, setData] = useState(dataLote);
+  const [data, setData] = useState([]);
+  const [filterData, setFilterData] = useState([]);
   const [modalInsertar, setModalInsertar] = useState(0);
   const [modalEditar, setModalEditar] = useState(0);
   const [modalEliminar, setModalEliminar] = useState(0);
@@ -65,7 +41,15 @@ function Mantenimiento() {
     Precio: "",
     Estado: "",
   });
+
   const { openSnackbar } = useSnackbar();
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(async () => {
+    const _lotes = await apiMykonos.lots.getLots();
+    setData(_lotes);
+    setFilterData(_lotes);
+  }, []);
 
   const seleccionarLote = (elemento, caso) => {
     setLoteSeleccionado(elemento);
@@ -78,24 +62,39 @@ function Mantenimiento() {
       [name]: value,
     }));
   };
-  const editar = () => {
-    var dataNueva = data;
-    dataNueva.map((lote) => {
-      if (lote.id === loteSeleccionado.id) {
-        lote.Lote = loteSeleccionado.Lote;
-        lote.Manzana = loteSeleccionado.Manzana;
-        lote.Numero = loteSeleccionado.Numero;
-        lote.Area = loteSeleccionado.Area;
-        lote.Precio = loteSeleccionado.Precio;
-        lote.Estado = loteSeleccionado.Estado;
-      }
-    });
-    setData(dataNueva);
-    openSnackbar({
-      severity: "success",
-      text: "Se edito correctamente el lote",
-    });
-    setModalEditar(false);
+  const editar = async () => {
+    try {
+      await apiMykonos.lots.updateLot({
+        data: {
+          idLote: +loteSeleccionado.id,
+          idEstado: +loteSeleccionado.idEstadoLote,
+          Precio: +loteSeleccionado.Precio,
+        },
+      });
+
+      var dataNueva = data;
+      dataNueva.forEach((lote) => {
+        if (lote.id === loteSeleccionado.id) {
+          lote.Lote = loteSeleccionado.Lote;
+          lote.Manzana = loteSeleccionado.Manzana;
+          lote.Numero = loteSeleccionado.Numero;
+          lote.Area = loteSeleccionado.Area;
+          lote.Precio = loteSeleccionado.Precio;
+          lote.Nombre = estadoLote.find(
+            ({ id }) => id === +loteSeleccionado.idEstadoLote
+          )?.label;
+          lote.idEstadoLote = +loteSeleccionado.idEstadoLote;
+        }
+      });
+      setData(dataNueva);
+      openSnackbar({
+        severity: "success",
+        text: "Se edito correctamente el lote",
+      });
+      setModalEditar(false);
+    } catch (error) {
+      openSnackbar({ severity: "error", text: "Error al editar el Lote" });
+    }
   };
   const eliminar = () => {
     setData(data.filter((lote) => lote.id !== loteSeleccionado.id));
@@ -123,7 +122,7 @@ function Mantenimiento() {
   };
 
   return (
-    <div className="detallesSolicitudLote">
+    <Container className="Manenimiento" maxWidth="xl" style={pageStyles}>
       <Typography variant="h4" align="center">
         Terrenos
       </Typography>
@@ -135,8 +134,35 @@ function Mantenimiento() {
       >
         Insertar Nuevo Lote
       </Button> */}
-
-      <div className="detallesProductos">
+      {/* <FormGroup>
+        Buscar:
+        <input
+          className="form-control"
+          onChange={({ target: { value } }) => {
+            console.log(data);
+            console.log(
+              data.filter(
+                (lot) =>
+                  lot.Letra.toString().toLowerCase() == value ||
+                  lot.Numero == value ||
+                  `${lot.Letra.toString().toLowerCase()}-${lot.Numero}` == value
+              )
+            );
+            setFilterData(
+              data.filter(
+                (lot) =>
+                  lot.Letra.toString().toLowerCase() == value ||
+                  lot.Numero == value ||
+                  `${lot.Letra.toString().toLowerCase()}-${lot.Numero}` == value
+              )
+            );
+          }}
+        />
+      </FormGroup> */}
+      <div
+        className="detallesProductos"
+        style={{ height: "100%", width: "100%" }}
+      >
         <table>
           <thead>
             <tr>
@@ -150,22 +176,25 @@ function Mantenimiento() {
             </tr>
           </thead>
           <tbody>
-            {data.map((elemento) => (
-              <tr>
-                <td>{elemento.Lote}</td>
-                <td>{elemento.Manzana}</td>
-                <td>{elemento.Numero}</td>
-                <td>{elemento.Area}</td>
-                <td>{elemento.Precio}</td>
-                <td>{elemento.Estado}</td>
-                <td>
-                  <Button
-                    color="primary"
-                    onClick={() => seleccionarLote(elemento, "Editar")}
-                  >
-                    Editar Lote
-                  </Button>
-                  {/* {"   "}
+            {data.length
+              ? data.map((elemento) => (
+                  <tr>
+                    <td>
+                      {elemento.Letra}-{elemento.Numero}
+                    </td>
+                    <td>{elemento.Letra}</td>
+                    <td>{elemento.Numero}</td>
+                    <td>{elemento.Area}</td>
+                    <td>{elemento.Precio}</td>
+                    <td>{elemento.Nombre}</td>
+                    <td>
+                      <Button
+                        color="primary"
+                        onClick={() => seleccionarLote(elemento, "Editar")}
+                      >
+                        Editar Lote
+                      </Button>
+                      {/* {"   "}
                   <Button
                     display="none"
                     type="hidden"
@@ -174,9 +203,10 @@ function Mantenimiento() {
                   > 
                     Eliminar
                   </Button>*/}
-                </td>
-              </tr>
-            ))}
+                    </td>
+                  </tr>
+                ))
+              : []}
           </tbody>
         </table>
       </div>
@@ -196,7 +226,7 @@ function Mantenimiento() {
               type="hidden"
               value={loteSeleccionado && loteSeleccionado.id}
               onChange={handleChange}
-              value={data[data.length - 1].id + 1}
+              value={data[data.length - 1]?.id + 1}
             />
           </FormGroup>
           <FormGroup>
@@ -343,25 +373,26 @@ function Mantenimiento() {
             <label>Estado:</label>
             <select
               className="form-control"
-              name="Estado"
+              name="idEstadoLote"
               type="text"
-              value={loteSeleccionado && loteSeleccionado.Estado}
+              value={loteSeleccionado && loteSeleccionado.idEstadoLote}
               onChange={handleChange}
             >
-              <option value="Disponible">Disponible</option>
-              <option value="Vendido">Vendido</option>
-              <option value="Reservado">Reservado</option>
-              <option value="Bloqueado">Bloqueado</option>
+              {estadoLote.map(({ id, label }) => (
+                <option key={id} value={id}>
+                  {label}
+                </option>
+              ))}
             </select>
           </FormGroup>
         </ModalBody>
 
         <ModalFooter>
-          <Button color="primary" onClick={() => editar()}>
-            Grabar
-          </Button>
           <Button color="danger" onClick={() => setModalEditar(false)}>
             Cancelar
+          </Button>
+          <Button color="primary" onClick={() => editar()}>
+            Grabar
           </Button>
         </ModalFooter>
       </Modal>
@@ -381,7 +412,7 @@ function Mantenimiento() {
           </Button>
         </ModalFooter>
       </Modal>
-    </div>
+    </Container>
   );
 }
 

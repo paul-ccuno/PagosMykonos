@@ -78,14 +78,12 @@ const CuotasFinanciar = () => {
   }, [nCuotas, fechaInicioCuotas]);
 
   useEffect(() => {
-    console.log(saldoFinanciar);
     setCuotas(pagos[pagosFields.cuotasFinanciar] || []);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (nCuotas && fechaInicioCuotas && cuotas.length === +nCuotas) {
-      console.log("pagos", pagos);
       for (let i = 0; i < +nCuotas; i++) {
         if (!cuotas[i][cuotasFields.monto]) {
           setIsDisabledNext(true);

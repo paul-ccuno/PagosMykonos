@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
       setUser(`${res[usuariosFields.name]} ${res[usuariosFields.lastName]}`);
       setToken(res[usuariosFields.dni]);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw error;
     }
   };

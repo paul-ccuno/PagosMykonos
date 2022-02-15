@@ -8,30 +8,36 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import TablePagosEdit from "./TablePagosEdit";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { GridActionsCellItem } from "@mui/x-data-grid-pro";
 import { Edit } from "@mui/icons-material";
 import apiMykonos from "services/apiMykonos";
+import { useEditCuotas } from "contexts/EditCuotasContext";
+import { useContratos } from "contexts/ContratosContext";
 
-const PagosEditDialog = ({ pago, cuotas, setCuotas }) => {
+const PagosEditDialog = ({ pago }) => {
   const [open, setOpen] = useState(false);
 
+  const { setIsCreated } = useContratos();
+  const { setCuotas } = useEditCuotas();
+
   const handleOpenDialog = async () => {
-    const _cuotas = await apiMykonos.contracts.getCuotas({ id: pago.id });
-    console.log(_cuotas);
+    const _cuotas = await apiMykonos.contracts.getCuotas({
+      id: pago.id,
+      custom: true,
+    });
+    setCuotas(_cuotas);
     setOpen(true);
   };
 
   const handleCloseDialog = () => {
+    setCuotas([]);
+    setIsCreated(true);
     setOpen(false);
   };
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
-
-  useEffect(() => {
-    console.log(pago);
-  }, []);
 
   return (
     <>

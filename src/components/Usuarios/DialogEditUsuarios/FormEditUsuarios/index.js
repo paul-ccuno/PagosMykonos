@@ -17,7 +17,7 @@ import { textFieldStyles } from "components/General/TextField";
 const FormEditUsuarios = ({ setOpen, user, handleCloseDialog }) => {
   const { openSnackbar } = useSnackbar();
   const { setIsCreated } = useClientes();
-  console.log(user);
+
   const {
     register,
     handleSubmit,
@@ -31,8 +31,8 @@ const FormEditUsuarios = ({ setOpen, user, handleCloseDialog }) => {
 
   const handleSubmitUpdate = async (values) => {
     try {
-      const res = await apiMykonos.users.updateUser({ data: values });
-      console.log(res);
+      await apiMykonos.users.updateUser({ data: values });
+
       setIsCreated(true);
       setOpen(false);
       openSnackbar({ text: "Usuario modificado correctamente" });

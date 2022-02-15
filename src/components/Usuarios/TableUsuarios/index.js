@@ -17,7 +17,7 @@ const TableUsuarios = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     const _users = await apiMykonos.users.getUsers();
-    console.log(_users);
+
     setUsers(_users);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

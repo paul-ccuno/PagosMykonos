@@ -1,83 +1,28 @@
 import "./styles.css";
-import { DataGridPro, GridActionsCellItem } from "@mui/x-data-grid-pro";
-import {
-  Delete as DeleteIcon,
-  Edit as EditIcon,
-  LibraryBooks as LibraryBooksIcon,
-  PictureAsPdf as PictureAsPdfIcon,
-} from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import { DataGridPro } from "@mui/x-data-grid-pro";
+import { useEffect } from "react";
 import PagosEditDialog from "../PagosEditDialog";
-import jsPDF from "jspdf";
+import PagosDeleteDialog from "../PagosDeleteDialog";
+
 import "jspdf-autotable";
-import { Button } from "@mui/material";
-import XLSX from "xlsx";
+
 import apiMykonos from "services/apiMykonos";
 import { useContratos } from "contexts/ContratosContext";
 import { contratosFields } from "models/Pagos.model";
-import { DataGrid } from "@mui/x-data-grid";
 import { format } from "date-fns";
-
-const rows = [
-  {
-    id: 1,
-    Nombres: "Damien",
-    manzana: "B",
-    lote: 2,
-    moneda: "Dolar",
-    fechaInicio: 25,
-    siguientePago: 25,
-    cuotasVencidas: 25,
-    deudaPendiente: 25,
-  },
-  {
-    id: 2,
-    Nombres: "Jorge",
-    manzana: "A",
-    lote: 3,
-    moneda: "Dolar",
-    fechaInicio: 25,
-    siguientePago: 25,
-    cuotasVencidas: 25,
-    deudaPendiente: 25,
-  },
-  {
-    id: 3,
-    Nombres: "Manrique",
-    manzana: "C",
-    lote: 2,
-    moneda: "Sol",
-    fechaInicio: 25,
-    siguientePago: 25,
-    cuotasVencidas: 25,
-    deudaPendiente: 25,
-  },
-  {
-    id: 4,
-    Nombres: "Eduardo",
-    manzana: "B",
-    lote: 2,
-    moneda: "Sol",
-    fechaInicio: 25,
-    siguientePago: 25,
-    cuotasVencidas: 25,
-    deudaPendiente: 25,
-  },
-];
+import { EditCuotasProvider } from "contexts/EditCuotasContext";
+import CuotasExportPagos from "components/Cuotas/CuotasExportPagos";
+import CuotasExportXLSX from "components/Cuotas/CuotasExportXLSX";
+import CuotasExportPDF from "components/Cuotas/CuotasExportPDF";
 
 const PagosTable = () => {
   const { contracts, setContracts, isCreated, setIsCreated } = useContratos();
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
-  const handleShowDeleteDialog = (params) => {
-    setOpenDeleteDialog(true);
-  };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     const _contracts = await apiMykonos.contracts.getContracts();
     setContracts(_contracts);
-    console.log(contracts);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -91,58 +36,16 @@ const PagosTable = () => {
           "yyyy-MM-dd"
         );
       }
-      console.log(_contracts);
+
       setContracts(_contracts);
       setIsCreated(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCreated]);
 
-  const DownloadPdf = (contract) => {
-    console.warn(contract);
-    const doc = new jsPDF();
-    doc.text("Gestor de pagos", 14, 10);
-    doc.autoTable({
-      columns: [
-        { title: "Cliente", dataKey: "cliente" },
-        { title: "Manzana", dataKey: "manzana" },
-        { title: "Lote", dataKey: "lote" },
-        { title: "Moneda", dataKey: "moneda" },
-        { title: "Fecha Inicio", dataKey: "fechaInicio" },
-        { title: "Siguiente Pago", dataKey: "siguientePago" },
-        { title: "Cuotas Vencidas", dataKey: "cuotasVencidas" },
-        { title: "Deuda Pendiente", dataKey: "deudaPendiente" },
-      ],
-      body: rows.filter((row) => row.id === contract.id),
-    });
-    doc.save("Gestor de pagos.pdf");
-  };
-  const DownloadExcel = (contract) => {
-    const ws = XLSX.utils.json_to_sheet(
-      rows.filter((row) => row.id === contract.id)
-    );
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Gestor de pagos");
-    XLSX.writeFile(wb, "Gestor de pagos.xlsx");
-  };
-
-  const DownloadExcelAll = () => {
-    const ws = XLSX.utils.json_to_sheet(rows);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Gestor de pagos");
-    XLSX.writeFile(wb, "Gestor de pagos.xlsx");
-  };
-
   return (
     <div className="Pagos-table">
-      <Button
-        id="exportar"
-        variant="contained"
-        color="success"
-        onClick={() => DownloadExcelAll()}
-      >
-        Exportar a Excel
-      </Button>
+      <CuotasExportPagos contracts={contracts} />
       <DataGridPro
         rows={contracts}
         columns={[
@@ -163,7 +66,7 @@ const PagosTable = () => {
             field: contratosFields.lote,
             headerName: "Número terreno",
             type: "number",
-            minWidth: 150,
+            minWidth: 100,
           },
           {
             field: contratosFields.moneda,
@@ -206,22 +109,12 @@ const PagosTable = () => {
             type: "actions",
             width: 150,
             getActions: (params) => [
-              <GridActionsCellItem
-                icon={<LibraryBooksIcon />}
-                label="Excel"
-                onClick={() => DownloadExcel(params.row)}
-              />,
-              <GridActionsCellItem
-                icon={<PictureAsPdfIcon />}
-                label="Pdf"
-                onClick={() => DownloadPdf(params.row)}
-              />,
-              <PagosEditDialog pago={params.row} />,
-              <GridActionsCellItem
-                icon={<DeleteIcon />}
-                label="Delete"
-                onClick={() => handleShowDeleteDialog(params)}
-              />,
+              <CuotasExportXLSX contract={params.row} />,
+              <CuotasExportPDF contract={params.row} />,
+              <EditCuotasProvider>
+                <PagosEditDialog pago={params.row} />
+              </EditCuotasProvider>,
+              <PagosDeleteDialog pago={params.row} />,
             ],
           },
         ]}

@@ -31,10 +31,6 @@ const FormStepOne = ({ clients, lots, dolar }) => {
     divisas.find(({ id }) => moneda === id) || 1
   );
 
-  useEffect(() => {
-    console.log("moneda", moneda);
-  }, [moneda]);
-
   const handleFormStepOneForm = () => {
     // e.preventDefault();
     const resStepOne = {
@@ -46,7 +42,6 @@ const FormStepOne = ({ clients, lots, dolar }) => {
     };
 
     setPagos({ ...resStepOne });
-    console.log(resStepOne);
   };
 
   useEffect(() => {

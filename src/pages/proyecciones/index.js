@@ -1,5 +1,5 @@
 import "./styles.css";
-import { useState } from "react";
+import { useEffect } from "react";
 import React from "react";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -11,17 +11,77 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import { Typography } from "@mui/material";
+import apiMykonos from "services/apiMykonos";
+import { months, years } from "utils/date";
+import { format } from "date-fns";
+
+const month = new Date().getMonth() + 1;
+const year = new Date().getFullYear();
 
 function Proyecciones() {
-  const [mesesDesde, setMesesDesde] = React.useState("");
-  const [añosDesde, setAñosDesde] = React.useState("");
-  const [mesesHasta, setMesesHasta] = React.useState("");
-  const [añosHasta, setAñosHasta] = React.useState("");
-  const [añoEspecifico, setAñoEspecifico] = React.useState("");
-  const [mesEspecifico, setMesEspecifico] = React.useState("");
+  const [mesesDesde, setMesesDesde] = React.useState(month);
+  const [añosDesde, setAñosDesde] = React.useState(year);
+  const [mesesHasta, setMesesHasta] = React.useState(month);
+  const [añosHasta, setAñosHasta] = React.useState(year);
+  const [añoEspecifico, setAñoEspecifico] = React.useState(year);
+  const [mesEspecifico, setMesEspecifico] = React.useState(month);
   const [value, setValue] = React.useState("1");
-  const [totalSoles, setTotalSoles] = React.useState(0);
-  const [totalDolares, setTotalDolares] = React.useState(0);
+  const [totalSolesEspecifico, setTotalSolesEspecifico] = React.useState(0);
+  const [totalDolaresEspecifico, setTotalDolaresEspecifico] = React.useState(0);
+  const [totalSolesIntervalo, setTotalSolesIntervalo] = React.useState(0);
+  const [totalDolaresIntervalo, setTotalDolaresIntervalo] = React.useState(0);
+
+  const projectionSpecific = async () => {
+    const _projectionSpecific =
+      await apiMykonos.contracts.getProyectionSpecific({
+        data: {
+          anho: añoEspecifico,
+          mes: mesEspecifico,
+        },
+      });
+    setTotalSolesEspecifico(_projectionSpecific.Soles);
+    setTotalDolaresEspecifico(_projectionSpecific.Dolares);
+  };
+
+  const projectionInterval = async () => {
+    const fechaInicio = format(
+      new Date(añosDesde, mesesDesde - 1, 1),
+      "yyyy-MM-dd"
+    );
+    const fechaFin = format(new Date(añosHasta, mesesHasta, 0), "yyyy-MM-dd");
+
+    const _projectionInterval =
+      await apiMykonos.contracts.getProyectionInterval({
+        data: {
+          fechaInicio,
+          fechaFin,
+        },
+      });
+
+    setTotalSolesIntervalo(_projectionInterval.Soles);
+    setTotalDolaresIntervalo(_projectionInterval.Dolares);
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // useEffect(() => {
+  //   projectionInterval();
+  //   projectionSpecific();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
+  useEffect(() => {
+    if (mesesDesde && mesesHasta && añosDesde && añosHasta) {
+      projectionInterval();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mesesDesde, mesesHasta, añosDesde, añosHasta]);
+
+  useEffect(() => {
+    if (mesEspecifico && añoEspecifico) {
+      projectionSpecific();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mesEspecifico, añoEspecifico]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -74,17 +134,11 @@ function Proyecciones() {
                 label="Años"
                 onChange={handleChangeAñosDesde}
               >
-                <MenuItem value={2015}>2015</MenuItem>
-                <MenuItem value={2016}>2016</MenuItem>
-                <MenuItem value={2017}>2017</MenuItem>
-                <MenuItem value={2018}>2018</MenuItem>
-                <MenuItem value={2019}>2019</MenuItem>
-                <MenuItem value={2020}>2020</MenuItem>
-                <MenuItem value={2021}>2021</MenuItem>
-                <MenuItem value={2022}>2022</MenuItem>
-                <MenuItem value={2023}>2023</MenuItem>
-                <MenuItem value={2024}>2024</MenuItem>
-                <MenuItem value={2025}>2025</MenuItem>
+                {years().map((year) => (
+                  <MenuItem key={year} value={year}>
+                    {year}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <FormControl sx={{ m: 1, minWidth: 80 }}>
@@ -99,17 +153,11 @@ function Proyecciones() {
                 label="Meses"
                 onChange={handleChangeMesesDesde}
               >
-                <MenuItem value={"Enero"}>Enero</MenuItem>
-                <MenuItem value={"Febrero"}>Febrero</MenuItem>
-                <MenuItem value={"Marzo"}>Marzo</MenuItem>
-                <MenuItem value={"Abril"}>Abril</MenuItem>
-                <MenuItem value={"Mayo"}>Mayo</MenuItem>
-                <MenuItem value={"Junio"}>Junio</MenuItem>
-                <MenuItem value={"Julio"}>Julio</MenuItem>
-                <MenuItem value={"Agosto"}>Agosto</MenuItem>
-                <MenuItem value={"Septiembre"}>Septiembre</MenuItem>
-                <MenuItem value={"Noviembre"}>Noviembre</MenuItem>
-                <MenuItem value={"Diciembre"}>Diciembre</MenuItem>
+                {months.map((month, i) => (
+                  <MenuItem key={i} value={i + 1}>
+                    {month}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <label>Hasta</label>
@@ -125,17 +173,11 @@ function Proyecciones() {
                 label="Años"
                 onChange={handleChangeAñosHasta}
               >
-                <MenuItem value={2015}>2015</MenuItem>
-                <MenuItem value={2016}>2016</MenuItem>
-                <MenuItem value={2017}>2017</MenuItem>
-                <MenuItem value={2018}>2018</MenuItem>
-                <MenuItem value={2019}>2019</MenuItem>
-                <MenuItem value={2020}>2020</MenuItem>
-                <MenuItem value={2021}>2021</MenuItem>
-                <MenuItem value={2022}>2022</MenuItem>
-                <MenuItem value={2023}>2023</MenuItem>
-                <MenuItem value={2024}>2024</MenuItem>
-                <MenuItem value={2025}>2025</MenuItem>
+                {years().map((year) => (
+                  <MenuItem key={year} value={year}>
+                    {year}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <FormControl sx={{ m: 1, minWidth: 80 }}>
@@ -150,17 +192,11 @@ function Proyecciones() {
                 label="Meses"
                 onChange={handleChangeMesesHasta}
               >
-                <MenuItem value={"Enero"}>Enero</MenuItem>
-                <MenuItem value={"Febrero"}>Febrero</MenuItem>
-                <MenuItem value={"Marzo"}>Marzo</MenuItem>
-                <MenuItem value={"Abril"}>Abril</MenuItem>
-                <MenuItem value={"Mayo"}>Mayo</MenuItem>
-                <MenuItem value={"Junio"}>Junio</MenuItem>
-                <MenuItem value={"Julio"}>Julio</MenuItem>
-                <MenuItem value={"Agosto"}>Agosto</MenuItem>
-                <MenuItem value={"Septiembre"}>Septiembre</MenuItem>
-                <MenuItem value={"Noviembre"}>Noviembre</MenuItem>
-                <MenuItem value={"Diciembre"}>Diciembre</MenuItem>
+                {months.map((month, i) => (
+                  <MenuItem key={i} value={i + 1}>
+                    {month}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <table>
@@ -187,7 +223,7 @@ function Proyecciones() {
                   {" - "}
                   {mesesHasta}
                 </td>
-                <td></td>
+                <td>{totalSolesIntervalo}</td>
               </tbody>
               <thead>
                 <tr style={{ textAlign: "center" }}>
@@ -212,7 +248,7 @@ function Proyecciones() {
                   {" - "}
                   {mesesHasta}
                 </td>
-                <td></td>
+                <td>{totalDolaresIntervalo}</td>
               </tbody>
             </table>
           </TabPanel>
@@ -230,17 +266,11 @@ function Proyecciones() {
                 label="Años"
                 onChange={handleChangeAñoEspecifico}
               >
-                <MenuItem value={2015}>2015</MenuItem>
-                <MenuItem value={2016}>2016</MenuItem>
-                <MenuItem value={2017}>2017</MenuItem>
-                <MenuItem value={2018}>2018</MenuItem>
-                <MenuItem value={2019}>2019</MenuItem>
-                <MenuItem value={2020}>2020</MenuItem>
-                <MenuItem value={2021}>2021</MenuItem>
-                <MenuItem value={2022}>2022</MenuItem>
-                <MenuItem value={2023}>2023</MenuItem>
-                <MenuItem value={2024}>2024</MenuItem>
-                <MenuItem value={2025}>2025</MenuItem>
+                {years().map((year) => (
+                  <MenuItem key={year} value={year}>
+                    {year}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <FormControl sx={{ m: 1, minWidth: 80 }}>
@@ -255,17 +285,11 @@ function Proyecciones() {
                 label="Meses"
                 onChange={handleChangeMesEspecifico}
               >
-                <MenuItem value={"Enero"}>Enero</MenuItem>
-                <MenuItem value={"Febrero"}>Febrero</MenuItem>
-                <MenuItem value={"Marzo"}>Marzo</MenuItem>
-                <MenuItem value={"Abril"}>Abril</MenuItem>
-                <MenuItem value={"Mayo"}>Mayo</MenuItem>
-                <MenuItem value={"Junio"}>Junio</MenuItem>
-                <MenuItem value={"Julio"}>Julio</MenuItem>
-                <MenuItem value={"Agosto"}>Agosto</MenuItem>
-                <MenuItem value={"Septiembre"}>Septiembre</MenuItem>
-                <MenuItem value={"Noviembre"}>Noviembre</MenuItem>
-                <MenuItem value={"Diciembre"}>Diciembre</MenuItem>
+                {months.map((month, i) => (
+                  <MenuItem key={i} value={i + 1}>
+                    {month}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
             <table>
@@ -281,7 +305,7 @@ function Proyecciones() {
                 <td>
                   {añoEspecifico} {" - "} {mesEspecifico}
                 </td>
-                <td></td>
+                <td>{totalSolesEspecifico}</td>
               </tbody>
               <thead>
                 <tr>
@@ -295,7 +319,7 @@ function Proyecciones() {
                 <td>
                   {añoEspecifico} {" - "} {mesEspecifico}
                 </td>
-                <td></td>
+                <td>{totalDolaresEspecifico}</td>
               </tbody>
             </table>
           </TabPanel>

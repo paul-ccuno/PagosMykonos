@@ -14,7 +14,7 @@ export const getClients = async (data = false) => {
           label: client.Nombres,
         };
       });
-      console.log(customRes);
+
       return customRes;
     }
     res.forEach((client, i) => (client.id = i));
@@ -43,7 +43,7 @@ export const createClient = async ({ data }) => {
       url: "clientes/register",
       data,
     });
-    console.log(res);
+
     if (res?.status === "ERROR") throw res;
     return res;
   } catch (error) {
@@ -57,7 +57,7 @@ export const updateClient = async ({ data }) => {
       url: "clientes/actualizar",
       data,
     });
-    console.log(res);
+
     if (res?.status === "ERROR") throw res;
     return res;
   } catch (error) {
@@ -70,7 +70,7 @@ export const deleteClient = async ({ dni }) => {
     const res = await del({
       url: `clientes/eliminar?DNI=${dni}`,
     });
-    console.log(res);
+
     if (res?.status === "ERROR") throw res;
     return res;
   } catch (error) {

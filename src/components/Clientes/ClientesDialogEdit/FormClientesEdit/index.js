@@ -48,7 +48,6 @@ const FormClientesEdit = ({
   const handleSubmitUpdate = async (values) => {
     try {
       const res = await apiMykonos.clients.updateClient({ data: values });
-      console.log(res);
       setIsCreated(true);
       setOpen(false);
       openSnackbar({ text: "Cliente modificado correctamente" });

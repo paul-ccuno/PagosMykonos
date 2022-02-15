@@ -17,6 +17,7 @@ const ClientesTable = () => {
   useEffect(async () => {
     const _clients = await apiMykonos.clients.getClients();
     setClients(_clients);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -26,6 +27,7 @@ const ClientesTable = () => {
       setClients(_clients);
       setIsCreated(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCreated]);
 
   return (

@@ -9,15 +9,15 @@ import {
   useTheme,
 } from "@mui/material";
 import { GridActionsCellItem } from "@mui/x-data-grid-pro";
-import { useClientes } from "contexts/ClientesContext";
+
+import { useContratos } from "contexts/ContratosContext";
 import { useSnackbar } from "contexts/SnackbarContext";
-import { clientesFields } from "models/Clientes.model";
 import { useState } from "react";
 import apiMykonos from "services/apiMykonos";
 
 const PagosDeleteDialog = ({ pago }) => {
   const [open, setOpen] = useState(false);
-  const { setIsCreated } = useClientes();
+  const { setIsCreated } = useContratos();
   const { openSnackbar } = useSnackbar();
 
   const theme = useTheme();
@@ -33,8 +33,8 @@ const PagosDeleteDialog = ({ pago }) => {
 
   const handleDelete = async () => {
     try {
-      await apiMykonos.clients.deleteClient({
-        id: pago[clientesFields.dni],
+      await apiMykonos.contracts.deleteContract({
+        id: pago.id,
       });
       setOpen(false);
       setIsCreated(true);
@@ -62,7 +62,7 @@ const PagosDeleteDialog = ({ pago }) => {
         >
           <DialogTitle>Eliminar Pago</DialogTitle>
           <DialogContent>
-            Está seguro eliminar el pago: <b>{pago[clientesFields.nombre]}</b>
+            Está seguro eliminar el pago: <b>{pago.id}</b>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog}>Cancelar</Button>

@@ -13,7 +13,7 @@ export const getLots = async () => {
   }
 };
 
-export const getLotsLN = async () => {
+export const getLotsLN = async (filter = false) => {
   try {
     const res = await get({
       url: "lotes/anidado",
@@ -25,9 +25,14 @@ export const getLotsLN = async () => {
         (customRes[i] = {
           id: lot.idLote,
           label: lot.Lote,
+          area: lot.Area,
           precio: lot.Precio,
+          estado: lot.Nombre,
         })
     );
+
+    if (filter) return customRes.filter((lot) => lot.estado === "Disponible");
+
     return customRes;
   } catch (error) {
     throw error;
@@ -53,7 +58,7 @@ export const updateLot = async ({ data }) => {
       url: "lotes/actualizar",
       data,
     });
-    console.log(res);
+
     if (res?.status === "ERROR") throw res;
     return res;
   } catch (error) {
