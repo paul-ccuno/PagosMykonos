@@ -53,8 +53,8 @@ function Proyecciones() {
     const _projectionInterval =
       await apiMykonos.contracts.getProyectionInterval({
         data: {
-          fechaInicio,
-          fechaFin,
+          FechaInicio: fechaInicio,
+          FechaFin: fechaFin,
         },
       });
 
