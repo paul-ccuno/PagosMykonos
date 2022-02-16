@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import { contratosFields, cuotasFields } from "models/Pagos.model";
+import { roundJS } from "utils/cuotas";
 import { del, get, patch, post } from "../api.service";
 
 export const getContracts = async () => {
@@ -10,6 +11,9 @@ export const getContracts = async () => {
     if (res?.status === "ERROR") throw res;
     res.forEach((contract) => {
       contract.id = contract.idContrato;
+      contract[contratosFields.deudaPendiente] = roundJS(
+        contract[contratosFields.deudaPendiente]
+      );
       contract[contratosFields.fechaInicio] = contract[
         contratosFields.fechaInicio
       ]

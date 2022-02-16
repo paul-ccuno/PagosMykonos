@@ -46,8 +46,12 @@ const FormStepThree = () => {
         InputLabelProps={{ shrink: true }}
         onChange={({ target: { value } }) => {
           const date = new Date(value);
-          date.setDate(date.getDate() + 1);
-          setFechaInicioCuotas(date);
+          if (!Number.isNaN(date.getTime())) {
+            date.setDate(date.getDate() + 1);
+            setFechaInicioCuotas(date);
+          } else {
+            setFechaInicioCuotas((prevValue) => prevValue);
+          }
         }}
         value={fechaInicioCuotas && format(fechaInicioCuotas, "yyyy-MM-dd")}
       />
