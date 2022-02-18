@@ -7,55 +7,46 @@ import apiMykonos from "services/apiMykonos";
 import * as XLSX from "xlsx/xlsx.mjs";
 
 function CuotasExportXLSX({ contract }) {
+
   const [cuotas, setCuotas] = useState([]);
   const tableRef = useRef();
 
   const { openSnackbar } = useSnackbar();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(async () => {
-    const _cuotas = await apiMykonos.contracts.getCuotas({
-      id: contract.id,
-      custom: true,
-      nombreEstado: true,
-    });
-    setCuotas(_cuotas);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const DownloadExcel = async () => {
+    
     try {
       const _cuotas = await apiMykonos.contracts.getCuotas({
         id: contract.id,
         custom: true,
         nombreEstado: true,
       });
-      setCuotas(_cuotas);
-
-      const table = document.getElementById("CuotasExportXLSX");
-
-      // const ws = XLSX.utils.json_to_sheet(_cuotas);
+      setCuotas(_cuotas)
+      const table = document.getElementById(`CuotasExportXLSX-${contract.id}`);     
       const ws = XLSX.utils.table_to_sheet(table);
-
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Gestor de pagos");
       XLSX.writeFile(wb, `Cuotas ${contract[contratosFields.cliente]}.xlsx`);
       openSnackbar({ text: "Cuotas exportado en excel correctamente" });
+      
     } catch (error) {
       console.error(error);
       openSnackbar({ severity: "error", text: "Error al exportar en excel" });
     }
-  };
 
+  } ;
+  
   return (
+    
     <>
       <GridActionsCellItem
         icon={<LibraryBooks />}
         label="Excel"
         onClick={DownloadExcel}
+        
       />
-
-      <table id="CuotasExportXLSX" style={{ display: "none" }} ref={tableRef}>
+      
+      <table id={`CuotasExportXLSX-${contract.id}`} name ="CuotasExportXLSX" style={{ display: "none" }} ref={tableRef}>
         <thead>
           <tr>
             <th style={{ textAlign: "center" }} colSpan="6">
@@ -74,7 +65,7 @@ function CuotasExportXLSX({ contract }) {
         <tbody>
           <tr>
             <td>Cliente:</td>
-            <td>{contract[contratosFields.cliente]}</td>
+            <td>{contract[contratosFields.cliente]}  </td>
           </tr>
           <tr>
             <td>Codigo de pago:</td>
@@ -139,5 +130,7 @@ function CuotasExportXLSX({ contract }) {
       </table>
     </>
   );
+  
 }
+
 export default CuotasExportXLSX;

@@ -108,14 +108,16 @@ const PagosTable = () => {
             field: "actions",
             type: "actions",
             width: 150,
-            getActions: (params) => [
-              <CuotasExportXLSX contract={params.row} />,
-              <CuotasExportPDF contract={params.row} />,
-              <EditCuotasProvider>
-                <PagosEditDialog pago={params.row} />
-              </EditCuotasProvider>,
-              <PagosDeleteDialog pago={params.row} />,
-            ],
+            getActions: (params) => {
+              return [
+                <CuotasExportXLSX contract={params.row} />,
+                <CuotasExportPDF contract={params.row} />,
+                <EditCuotasProvider>
+                  <PagosEditDialog pago={params.row} />
+                </EditCuotasProvider>,
+                <PagosDeleteDialog pago={params.row} />,
+              ];
+            },
           },
         ]}
         initialState={{
