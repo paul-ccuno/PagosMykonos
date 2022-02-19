@@ -17,10 +17,8 @@ export const calcCuotas = (cuotas = [], index, saldo = 0, value = 0) => {
 
   if (index > 0) {
     if (!value)
-      cuotas[index][cuotasFields.saldo] = roundJS(
-        cuotas[index - 1][cuotasFields.saldo]
-      );
-    let saldoInicial = roundJS(cuotas[index - 1][cuotasFields.saldo]);
+      cuotas[index][cuotasFields.saldo] = roundJS( cuotas[index - 1][cuotasFields.saldo]  );
+      let saldoInicial = roundJS(cuotas[index - 1][cuotasFields.saldo]);
     for (let i = index; i < cuotas.length; i++) {
       saldoInicial -= cuotas[i][cuotasFields.monto];
       cuotas[i][cuotasFields.saldo] = roundJS(saldoInicial);
@@ -49,18 +47,15 @@ export const calcCuotasFinanciar = (cuotas) => {
 };
 
 export function generarArrayCuotas(CantidadCoutas, Monto) {
-  let couta = parseFloat(Math.round((Monto / CantidadCoutas) * 100) / 100);
+  let couta = roundJS((Monto / CantidadCoutas));
   let ArrayCoutas = [];
   for (let i = 0; i < CantidadCoutas; i++) {
     ArrayCoutas.unshift(couta);
   }
   let acumulador;
-  acumulador = couta * (CantidadCoutas - 1);
+  acumulador = roundJS(couta * (CantidadCoutas - 1));
   Monto = Monto - acumulador;
-  ArrayCoutas[ArrayCoutas.length - 1] = parseFloat(
-    Math.round(Monto * 100) / 100
-  );
-
+  ArrayCoutas[ArrayCoutas.length - 1] = roundJS(Monto);
   return ArrayCoutas;
 }
 
@@ -74,11 +69,10 @@ export function editarCouta(
     let ArrayCoutas2 = ArrayCoutas;
     ArrayCoutas2[numeroCouta - 1].monto = MontoAModificar;
     let CantidadPagada = MontoActual - MontoAModificar;
-    let CantidadAPagar = Math.round(CantidadPagada * 100) / 100;
+    let CantidadAPagar = roundJS(CantidadPagada);
 
     let coutasPendientes = ArrayCoutas2.length - 1;
-    let coutaNueva =
-      Math.round((CantidadAPagar / coutasPendientes) * 100) / 100;
+    let coutaNueva = roundJS((CantidadAPagar / coutasPendientes));
     for (let i = 0; i < ArrayCoutas2.length - 1; i++) {
       ArrayCoutas2[i].monto = coutaNueva;
     }
@@ -86,7 +80,7 @@ export function editarCouta(
      * Ajustar Saldo
      */
     ArrayCoutas2[numeroCouta - 1].saldo = 0;
-    ArrayCoutas2[0].saldo = MontoActual - coutaNueva;
+    ArrayCoutas2[0].saldo = roundJS(MontoActual - coutaNueva);
     if (!MontoAModificar) {
       for (let i = numeroCouta - 1; i > 0; i--) {
         if (
@@ -97,9 +91,7 @@ export function editarCouta(
           ArrayCoutas2[numeroCouta - 2].saldo = 0;
         } else {
           if (i < numeroCouta - 2)
-            ArrayCoutas2[i].saldo = Math.round(
-              ArrayCoutas2[i + 1].saldo + coutaNueva
-            );
+            ArrayCoutas2[i].saldo = roundJS(ArrayCoutas2[i + 1].saldo + coutaNueva);
         }
       }
       return ArrayCoutas2;
@@ -107,9 +99,7 @@ export function editarCouta(
 
     for (let i = numeroCouta - 2; i > 0; i--) {
       if (MontoAModificar > 0) {
-        ArrayCoutas2[i].saldo = Math.round(
-          ArrayCoutas2[i + 1].saldo + coutaNueva
-        );
+        ArrayCoutas2[i].saldo = roundJS(ArrayCoutas2[i + 1].saldo + coutaNueva);
       }
     }
 

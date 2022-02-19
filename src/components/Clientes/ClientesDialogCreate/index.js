@@ -50,6 +50,7 @@ const ClientesDialogCreate = () => {
 
   const handleSubmitCreate = async (values) => {
     try {
+      console.log(values);
       const res = await apiMykonos.clients.createClient({ data: values });
       openSnackbar({ text: "Cliente creado correctamente" });
       setIsCreated(true);
